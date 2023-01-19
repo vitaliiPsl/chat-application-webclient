@@ -8,7 +8,7 @@ const initUserDetails = { nickname: '', email: '', password: '' }
 const SignUpForm = () => {
 	const [userDetails, setUserDetails] = useState(initUserDetails)
 
-    const [signUp, { isLoading }] = useSignUpMutation()
+	const [signUp, { isLoading }] = useSignUpMutation()
 
 	const handleSubmit = async (e) => {
 		e.preventDefault()
@@ -39,7 +39,7 @@ const SignUpForm = () => {
 						id='nickname-field'
 						className='field'
 						placeholder='Nickname'
-                        required
+						required
 						autoComplete='off'
 						onChange={handleInputChange}
 					/>
@@ -52,7 +52,7 @@ const SignUpForm = () => {
 						id='email-field'
 						className='field'
 						placeholder='Email'
-                        required
+						required
 						autoComplete='off'
 						onChange={handleInputChange}
 					/>
@@ -65,8 +65,8 @@ const SignUpForm = () => {
 						id='password-field'
 						className='field'
 						placeholder='Password'
-                        required
-                        autoComplete='off'
+						required
+						autoComplete='off'
 						onChange={handleInputChange}
 					/>
 				</div>
@@ -74,6 +74,13 @@ const SignUpForm = () => {
 				<button type='submit' className='submit-btn btn'>
 					Sign up
 				</button>
+
+				<div className='redirect-box'>
+					<span className='or-span'>or</span>
+					<a href='#' className='redirect-link'>
+						Sign in
+					</a>
+				</div>
 			</div>
 		</form>
 	)

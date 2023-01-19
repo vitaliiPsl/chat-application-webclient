@@ -44,6 +44,7 @@
 }
 
 .btn {
+    width: 100%;
 	min-width: 200px;
     padding: 10px 16px;
 
@@ -57,7 +58,18 @@
 	transition: 0.5s;
 }
 
-.auth-form button:hover {
+.btn:hover {
     color: #fff;
     background: #2e2e2e;
+}
+
+.redirect-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.redirect-link {
+    color: #2e2e2e;
 }

@@ -18,6 +18,7 @@ const SignInForm = () => {
 
 		try {
 			let response = await signIn(credentials).unwrap()
+			console.log(response)
 			dispatch(setToken(response.token))
 		} catch (err) {
 			console.log(err)
@@ -42,7 +43,7 @@ const SignInForm = () => {
 						id='email-field'
 						className='field'
 						placeholder='Email'
-                        required
+						required
 						autoComplete='off'
 						onChange={handleInputChange}
 					/>
@@ -55,7 +56,7 @@ const SignInForm = () => {
 						id='password-field'
 						className='field'
 						placeholder='Password'
-                        required
+						required
 						autoComplete='off'
 						onChange={handleInputChange}
 					/>
@@ -64,6 +65,13 @@ const SignInForm = () => {
 				<button type='submit' className='submit-btn btn'>
 					Sign in
 				</button>
+
+				<div className='redirect-box'>
+					<span className='or-span'>or</span>
+					<a href='#' className='redirect-link'>
+						Sign up
+					</a>
+				</div>
 			</div>
 		</form>
 	)
