@@ -26,7 +26,6 @@ const SignInForm = () => {
 
 	const handleInputChange = (e) => {
 		initCredentials[e.target.name] = e.target.value
-		console.log(initCredentials)
 		setCredentials((credentials) => initCredentials)
 	}
 
