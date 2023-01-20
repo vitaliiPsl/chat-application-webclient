@@ -32,7 +32,7 @@ const baseQueryWrapper = async (args, api, extraOptions) => {
 }
 
 export const apiSlice = createApi({
-    reducerPath: 'auth',
+    reducerPath: 'api',
     baseQuery: baseQueryWrapper,
     endpoints: builder => ({})
 })
