@@ -1,0 +1,30 @@
+
+.layout {
+    min-height: 0;
+    width: 100%;
+    padding: 10px;
+    
+    flex: 1;
+    display: flex;
+    align-items: stretch;
+    gap: 24px;
+}
+
+.layout > div {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.side-pane-box {
+    width: 20%;
+
+    background: #fff;
+	box-shadow: #2e2e2e20 2px 2px 8px;
+}
+
+.content-box {
+    width: 80%;
+
+    background: #fff;
+	box-shadow: #2e2e2e20 2px 2px 8px;
+}
