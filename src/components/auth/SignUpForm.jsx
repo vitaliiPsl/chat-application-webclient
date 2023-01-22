@@ -5,6 +5,7 @@ import { useSignUpMutation } from '../../features/auth/authApi'
 
 import TextField from '../text-field/TextField'
 import Button from '../button/Button'
+import Spinner from '../spinner/Spinner'
 
 const initUserDetails = { nickname: '', email: '', password: '' }
 
@@ -61,7 +62,13 @@ const SignUpForm = () => {
 					onChange={handleInputChange}
 				/>
 
-				<Button text={'Sign up'} type='submit' />
+				<Button type='submit'>
+					{isLoading ? (
+						<Spinner size={19} color={'#f00'} />
+					) : (
+						'Sign up'
+					)}
+				</Button>
 
 				<div className='redirect-box'>
 					<span className='or-span'>or</span>

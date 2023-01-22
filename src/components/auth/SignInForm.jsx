@@ -4,8 +4,10 @@ import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { setToken } from '../../features/auth/authSlice'
 import { useSignInMutation } from '../../features/auth/authApi'
+
 import TextField from '../text-field/TextField'
 import Button from '../button/Button'
+import Spinner from '../spinner/Spinner'
 
 const initCredentials = { email: '', password: '' }
 
@@ -55,7 +57,13 @@ const SignInForm = () => {
 					onChange={handleInputChange}
 				/>
 
-				<Button text={'Sign in'} type={'submit'} />
+				<Button type={'submit'}>
+					{isLoading ? (
+						<Spinner size={19} color={'#f00'} />
+					) : (
+						'Sign in'
+					)}
+				</Button>
 
 				<div className='redirect-box'>
 					<span className='or-span'>or</span>
