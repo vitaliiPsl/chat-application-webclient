@@ -1,0 +1,23 @@
+.text-field {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+.text-field label {
+    
+}
+
+.text-field input {
+	padding: 10px 16px;
+
+	font-size: 16px;
+	border: 1px solid #212121;
+	border-radius: 4px;
+}
+
+.text-field input:focus {
+	outline: none;
+	color: #fff;
+	background: #212121;
+}
