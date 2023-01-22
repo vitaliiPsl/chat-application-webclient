@@ -4,6 +4,8 @@ import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { setToken } from '../../features/auth/authSlice'
 import { useSignInMutation } from '../../features/auth/authApi'
+import TextField from '../text-field/TextField'
+import Button from '../button/Button'
 
 const initCredentials = { email: '', password: '' }
 
@@ -35,36 +37,25 @@ const SignInForm = () => {
 			<h3>Sign in</h3>
 
 			<div className='fields-box'>
-				<div className='field-box'>
-					<label htmlFor='email-field'>Email</label>
-					<input
-						type='email'
-						name='email'
-						id='email-field'
-						className='field'
-						placeholder='Email'
-						required
-						autoComplete='off'
-						onChange={handleInputChange}
-					/>
-				</div>
-				<div className='field-box'>
-					<label htmlFor='password-field'>Password</label>
-					<input
-						type='password'
-						name='password'
-						id='password-field'
-						className='field'
-						placeholder='Password'
-						required
-						autoComplete='off'
-						onChange={handleInputChange}
-					/>
-				</div>
+				<TextField
+					label={'Email'}
+					name={'email'}
+					type={'email'}
+					placeholder={'Email'}
+					required={true}
+					onChange={handleInputChange}
+				/>
 
-				<button type='submit' className='submit-btn btn'>
-					Sign in
-				</button>
+				<TextField
+					label={'Password'}
+					name={'password'}
+					type={'password'}
+					placeholder={'Password'}
+					required={true}
+					onChange={handleInputChange}
+				/>
+
+				<Button text={'Sign in'} type={'submit'} />
 
 				<div className='redirect-box'>
 					<span className='or-span'>or</span>
