@@ -8,6 +8,7 @@ const TextField = ({
 	required = false,
 	autoComplete = false,
 	onChange,
+    reference
 }) => {
 	return (
 		<div className='text-field'>
@@ -22,6 +23,7 @@ const TextField = ({
 				required={required}
 				autoComplete={autoComplete ? 'on' : 'off'}
 				onChange={onChange}
+                ref={reference}
 			/>
 		</div>
 	)
