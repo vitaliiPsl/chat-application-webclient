@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-    chat,
+    chat: null,
 	chats: [],
 }
 
@@ -9,7 +9,7 @@ export const chatsSlice = createSlice({
 	name: 'chats',
 	initialState,
 	reducers: {
-        setChat: (state, chats) => {
+        setChat: (state, action) => {
             let chat = action.payload
             state.chat = chat
         },
