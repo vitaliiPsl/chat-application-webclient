@@ -1,0 +1,36 @@
+.error {
+    padding: 12px 32px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid #f00;
+    border-radius: 8px;
+
+    position: relative;
+}
+
+.error-message {
+    color: #f00;
+}
+
+.close-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    padding: 2px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 4px;
+    cursor: pointer;
+    transition: 0.5s;
+}
+
+.close-btn:hover {
+    background: #46494655;
+}
