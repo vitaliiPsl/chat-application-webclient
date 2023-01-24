@@ -98,6 +98,40 @@ const ChatNew = () => {
 		}
 	}
 
+	const mapUserSearchResults = (searchResult) => {
+		let addIcon = <span className='material-symbols-outlined'>add</span>
+
+		return searchResult
+			.slice(0, 5)
+			.map((user, index) =>
+				mapUserListItem(user, index, addIcon, () =>
+					addSelectedUser(user)
+				)
+			)
+	}
+
+	const mapSelectedUsers = (selectedUsers) => {
+		let closeIcon = <span className='material-symbols-outlined'>close</span>
+
+		return [...selectedUsers.values()].map((user, index) =>
+			mapUserListItem(user, index, closeIcon, null, () =>
+				removeSelectedUser(user.id)
+			)
+		)
+	}
+
+	const mapUserListItem = (user, index, icon, onClick, onIconClick) => {
+		return (
+			<UserListItem
+				user={user}
+				key={index}
+				onClick={onClick}
+				icon={icon}
+				onIconClick={onIconClick}
+			/>
+		)
+	}
+
 	return (
 		<div className='chat-new'>
 			<div className='chat-new-title-bar-box'>
@@ -153,22 +187,7 @@ const ChatNew = () => {
 
 							{searchResult.length > 0 && (
 								<div className={`users-search-result-list`}>
-									{searchResult
-										.slice(0, 5)
-										.map((user, index) => (
-											<UserListItem
-												user={user}
-												key={index}
-												onClick={() =>
-													addSelectedUser(user)
-												}
-												icon={
-													<span className='material-symbols-outlined'>
-														add
-													</span>
-												}
-											/>
-										))}
+									{mapUserSearchResults(searchResult)}
 								</div>
 							)}
 						</div>
@@ -186,30 +205,16 @@ const ChatNew = () => {
 									</span>
 								</div>
 							)}
+                            
 							<div className='users-selected-list'>
-								{[...selectedUsers.values()].map(
-									(user, index) => (
-										<UserListItem
-											user={user}
-											key={index}
-											icon={
-												<span className='material-symbols-outlined'>
-													close
-												</span>
-											}
-											onIconClick={() =>
-												removeSelectedUser(user.id)
-											}
-										/>
-									)
-								)}
+								{mapSelectedUsers(selectedUsers)}
 							</div>
 						</div>
 					</div>
 				</form>
 
 				<Button onClick={handleSubmit}>
-					{isCreateChatLoading ? <Spinner /> : 'Create chat'}
+					{isCreateChatLoading ? <Spinner size={19} color={'#888'} /> : 'Create chat'}
 				</Button>
 			</div>
 		</div>
