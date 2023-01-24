@@ -6,33 +6,50 @@ import { useSignUpMutation } from '../../features/auth/authApi'
 import TextField from '../text-field/TextField'
 import Button from '../button/Button'
 import Spinner from '../spinner/Spinner'
+import { useEffect } from 'react'
+import Error from '../error/Error'
 
 const initUserDetails = { nickname: '', email: '', password: '' }
 
 const SignUpForm = () => {
 	const [userDetails, setUserDetails] = useState(initUserDetails)
+	const [error, setError] = useState()
 
-	const [signUp, { isLoading }] = useSignUpMutation()
+	const [signUp, { data: signUpData, error: signUpError, isLoading }] =
+		useSignUpMutation()
+
+	useEffect(() => {
+		if (signUpData) {
+			// TODO: redirect to log in page
+		}
+		if (signUpError) {
+			setError(() => signUpError?.data?.message)
+		}
+	}, [signUpData, signUpError])
 
 	const handleSubmit = async (e) => {
 		e.preventDefault()
 
-		try {
-			let response = await signUp(userDetails).unwrap()
-			console.log(response)
-		} catch (err) {
-			console.log(err)
-		}
+		signUp(userDetails)
 	}
 
 	const handleInputChange = (e) => {
 		initUserDetails[e.target.name] = e.target.value
+
 		setUserDetails((userDetails) => initUserDetails)
+		removeError()
+	}
+
+	const removeError = () => {
+        console.log('Remove error')
+		setError((error) => null)
 	}
 
 	return (
 		<form onSubmit={handleSubmit} className={'auth-form sign-up-form'}>
 			<h3>Sign up</h3>
+
+			{error && <Error message={error} onClose={removeError} />}
 
 			<div className='fields-box'>
 				<TextField
@@ -64,7 +81,7 @@ const SignUpForm = () => {
 
 				<Button type='submit'>
 					{isLoading ? (
-						<Spinner size={19} color={'#f00'} />
+						<Spinner size={19} color={'#888'} />
 					) : (
 						'Sign up'
 					)}
