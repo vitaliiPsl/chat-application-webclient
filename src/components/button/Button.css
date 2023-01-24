@@ -1,4 +1,6 @@
 .btn {
+    width: 100%;
+	min-width: 200px;
 	padding: 10px 16px;
 
     display: flex;
