@@ -5,17 +5,34 @@ export const chatsApiReducer = apiSlice.injectEndpoints({
 		getChats: builder.query({
 			query: () => '/chats',
 		}),
-		getChatById: builder.query({
+		getChat: builder.query({
 			query: (id) => `/chats/${id}`,
 		}),
-        createChat: builder.mutation({
-            query: chatDetails => ({
-                url: '/chats',
-                method: 'post',
-                body: chatDetails
-            })
-        }),
+		getChatMessages: builder.query({
+			query: (id) => `/chats/${id}/messages`,
+		}),
+        // TODO: remove after ws connection is implemented
+		sendMessage: builder.mutation({
+			query: (id, message) => ({
+				url: `/chats/${id}/messages`,
+				method: 'post',
+				body: message,
+			}),
+		}),
+		createChat: builder.mutation({
+			query: (chatDetails) => ({
+				url: '/chats',
+				method: 'post',
+				body: chatDetails,
+			}),
+		}),
 	}),
 })
 
-export const { useGetChatsQuery, useGetChatByIdQuery, useCreateChatMutation } = chatsApiReducer
+export const {
+	useGetChatsQuery,
+	useGetChatQuery,
+	useGetChatMessagesQuery,
+	useSendMessageMutation,
+	useCreateChatMutation,
+} = chatsApiReducer
