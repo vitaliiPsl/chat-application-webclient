@@ -28,14 +28,29 @@ const Chats = () => {
 		}
 	}, [data, error])
 
-    const openChat = (id) => {
-        // TODO: redirect to chat with given id
-    }
+	const openChat = (id) => {
+		// TODO: redirect to chat with given id
+	}
 
 	const mapChatsToChatListItem = (chats) => {
-		return chats.map((chat, index) => (
-			<ChatListItem chat={chat} key={index} />
-		))
+		return [...chats]
+			.sort(compareChatsByLastMessage)
+			.map((chat, index) => <ChatListItem chat={chat} key={index} />)
+	}
+
+	const mapChatToChatListItem = (chat, index) => {
+		return <ChatListItem chat={chat} key={index} />
+	}
+
+	const compareChatsByLastMessage = (chat1, chat2) => {
+		if (!chat1.lastMessage) {
+			return 1
+		}
+		if (!chat2.lastMessage) {
+			return -1
+		}
+
+		return Date.parse(chat1.lastMessage) - Date.parse(chat2.lastMessage)
 	}
 
 	return (
@@ -62,7 +77,7 @@ const Chats = () => {
 					</div>
 				)}
 
-				{!isLoading && chats && chats.length > 0 && (
+				{!isLoading && chats && (
 					<div className='chats-list'>
 						{mapChatsToChatListItem(chats)}
 					</div>
