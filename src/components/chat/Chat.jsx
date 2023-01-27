@@ -92,6 +92,37 @@ const Chat = () => {
 		messageInputRef.current.value = ''
 	}
 
+	const mapMessagesToMessageGroups = () => {
+		let groups = groupMessages()
+
+		return [...groups].map((group, index) => (
+			<ChatMessageGroup group={group} user={user} key={index} />
+		))
+	}
+
+    const groupMessages = () => {
+		let groups = new Map()
+
+		let user = null
+		let groupMessages = []
+
+		for (let message of messages) {
+			if (!user) {
+				user = message.user
+			} else if (message.user.id !== user.id) {
+				groups.set(user, groupMessages)
+
+				user = message.user
+				groupMessages = []
+			}
+
+			groupMessages.push(message)
+		}
+        groups.set(user, groupMessages)
+		
+        return groups
+	}
+
 	return !chat ? (
 		<Spinner />
 	) : (
@@ -103,7 +134,12 @@ const Chat = () => {
 			</div>
 
 			<div className='chat-messages-box'>
-				
+				{messagesIsLoading && <Spinner />}
+				{messages && (
+					<div className='chat-messages-list'>
+						{mapMessagesToMessageGroups()}
+					</div>
+				)}
 			</div>
 
 			<div className='chat-message-input-box'>
