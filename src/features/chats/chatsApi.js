@@ -13,10 +13,10 @@ export const chatsApiReducer = apiSlice.injectEndpoints({
 		}),
         // TODO: remove after ws connection is implemented
 		sendMessage: builder.mutation({
-			query: (id, message) => ({
-				url: `/chats/${id}/messages`,
+			query: (args) => ({
+				url: `/chats/${args.id}/messages`,
 				method: 'post',
-				body: message,
+				body: args.message,
 			}),
 		}),
 		createChat: builder.mutation({
