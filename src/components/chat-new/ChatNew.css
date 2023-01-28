@@ -65,15 +65,15 @@
     overflow: scroll;
 }
 
-.chat-users-box {
+.chat-new-users-box {
 	flex: 1;
 }
 
-.users-selected-box {
+.chat-new-users-selected-box {
     flex: 1;
 }
 
-.users-selected-box .no-selected-users-box {
+.chat-new-users-selected-box .no-selected-users-box {
     padding: 12px;
     
     flex: 1;

@@ -147,7 +147,7 @@ const ChatNew = () => {
 				)}
 
 				<form className='chat-new-form'>
-					<div className='outer-box chat-details-box'>
+					<div className='outer-box chat-new-details-box'>
 						<div className='inner-box'>
 							<TextField
 								label={'Name'}
@@ -171,8 +171,8 @@ const ChatNew = () => {
 						</div>
 					</div>
 
-					<div className='outer-box chat-users-box'>
-						<div className={`inner-box users-search-box`}>
+					<div className='outer-box chat-new-users-box'>
+						<div className={`inner-box chat-new-users-search-box`}>
 							<label className='users-search-label'>
 								User search
 							</label>
@@ -192,7 +192,7 @@ const ChatNew = () => {
 							)}
 						</div>
 
-						<div className='inner-box users-selected-box'>
+						<div className='inner-box chat-new-users-selected-box'>
 							<label className='users-selected-label'>
 								Selected users
 							</label>
@@ -206,7 +206,7 @@ const ChatNew = () => {
 								</div>
 							)}
                             
-							<div className='users-selected-list'>
+							<div className='chat-new-users-selected-list'>
 								{mapSelectedUsers(selectedUsers)}
 							</div>
 						</div>
