@@ -7,6 +7,7 @@ export const chatsApiReducer = apiSlice.injectEndpoints({
 		}),
 		getChat: builder.query({
 			query: (id) => `/chats/${id}`,
+            providesTags: ['Chat']
 		}),
 		createChat: builder.mutation({
 			query: (chatDetails) => ({
@@ -21,6 +22,7 @@ export const chatsApiReducer = apiSlice.injectEndpoints({
 				method: 'put',
 				body: args.payload,
 			}),
+            invalidatesTags: ['Chat']
 		}),
 		getChatMessages: builder.query({
 			query: (id) => `/chats/${id}/messages`,
