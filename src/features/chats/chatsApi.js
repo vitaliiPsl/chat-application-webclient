@@ -7,7 +7,7 @@ export const chatsApiReducer = apiSlice.injectEndpoints({
 		}),
 		getChat: builder.query({
 			query: (id) => `/chats/${id}`,
-            providesTags: ['Chat']
+			providesTags: ['Chat'],
 		}),
 		createChat: builder.mutation({
 			query: (chatDetails) => ({
@@ -22,14 +22,22 @@ export const chatsApiReducer = apiSlice.injectEndpoints({
 				method: 'put',
 				body: args.payload,
 			}),
-            invalidatesTags: ['Chat']
+			invalidatesTags: ['Chat'],
 		}),
-        getChatMember: builder.query({
-            query: (args) => `/chats/${args.chatId}/members/${args.userId}`,
+		getChatMember: builder.query({
+			query: (args) => `/chats/${args.chatId}/members/${args.userId}`,
 		}),
-        getChatMembers: builder.query({
-            query: (id) => `/chats/${id}/members`,
-            providesTags: ['Members']
+		getChatMembers: builder.query({
+			query: (id) => `/chats/${id}/members`,
+			providesTags: ['Members'],
+		}),
+		addChatMember: builder.mutation({
+			query: (args) => ({
+				url: `/chats/${args.chatId}/members`,
+				method: 'post',
+				body: args.payload,
+			}),
+			invalidatesTags: ['Members'],
 		}),
 		getChatMessages: builder.query({
 			query: (id) => `/chats/${id}/messages`,
@@ -49,9 +57,10 @@ export const {
 	useGetChatsQuery,
 	useGetChatQuery,
 	useCreateChatMutation,
-    useUpdateChatMutation,
-    useGetChatMemberQuery,
-    useGetChatMembersQuery,
+	useUpdateChatMutation,
+	useGetChatMemberQuery,
+	useGetChatMembersQuery,
+    useAddChatMemberMutation,
 	useGetChatMessagesQuery,
 	useSendMessageMutation,
 } = chatsApiReducer
