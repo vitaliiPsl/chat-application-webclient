@@ -1,6 +1,6 @@
 import './ChatDetails.css'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 
 import { useSelector, useDispatch } from 'react-redux'
 
@@ -11,6 +11,7 @@ import {
 	useGetChatMemberQuery,
 	useGetChatMembersQuery,
 	useAddChatMemberMutation,
+	useRemoveChatMemberMutation,
 } from '../../features/chats/chatsApi'
 
 import Avatar from '../avatar/Avatar'
@@ -22,6 +23,7 @@ import Button from '../button/Button'
 import MaterialIcon from '../material-icon/MaterialIcon'
 import MemberListItem from './MemberListItem'
 import UsersSearch from '../users-search/UsersSearch'
+import Dropdown from '../dropdown/Dropdown'
 
 const chatId = 'bb21ec87-18dc-4af0-be5a-9e84641693d0'
 
@@ -84,6 +86,11 @@ const ChatDetails = () => {
 		},
 	] = useAddChatMemberMutation()
 
+	const [
+		removeChatMember,
+		{ error: removeMemberError, isLoading: removeMemberIsLoading },
+	] = useRemoveChatMemberMutation()
+
 	useEffect(() => {
 		if (chatData) {
 			dispatch(setChat(chatData))
@@ -96,9 +103,6 @@ const ChatDetails = () => {
 		}
 		if (memberData) {
 			dispatch(setMembers(membersData))
-		}
-		if (addMemberData) {
-			console.log(addMemberData)
 		}
 	}, [chatData, memberData, updateChatData, membersData, addMemberData])
 
@@ -118,7 +122,17 @@ const ChatDetails = () => {
 		if (addMemberError) {
 			handleError(addMemberError)
 		}
-	}, [chatError, memberError, updateChatError, membersError, addMemberError])
+		if (removeMemberError) {
+			handleError(removeMemberError)
+		}
+	}, [
+		chatError,
+		memberError,
+		updateChatError,
+		membersError,
+		addMemberError,
+		removeMemberError,
+	])
 
 	const handleError = (err) => {
 		console.log(err?.data?.message)
@@ -155,12 +169,47 @@ const ChatDetails = () => {
 		addChatMember({ chatId, payload })
 	}
 
+	const removeMember = (user) => {
+		removeChatMember({ chatId, userId: user.id })
+	}
+
 	const mapMembersToMemberListItems = (members) => {
 		return members.map((member, index) => mapMemberListItem(member, index))
 	}
 
 	const mapMemberListItem = (member, index) => {
-		return <MemberListItem member={member} key={index} />
+		if (!isMemberOwnerOrAdmin(actorMember)) {
+			return <MemberListItem member={member} key={index} />
+		}
+
+		return (
+			<MemberListItem
+				member={member}
+				key={index}
+				options={getMemberListItemOptionsDropdown(member)}
+			/>
+		)
+	}
+
+	const getMemberListItemOptionsDropdown = (member) => {
+		return (
+			<Dropdown
+				content={
+					<div className='chat-details-member-options-icon-box'>
+						<MaterialIcon icon={'more_vert'} />
+					</div>
+				}
+				options={getMemberListItemOptions(member)}
+			/>
+		)
+	}
+
+	const getMemberListItemOptions = (member) => {
+		let options = new Map()
+
+		options.set('remove', () => removeMember(member.user))
+
+		return options
 	}
 
 	const toggleSearchBox = () => {
@@ -245,8 +294,7 @@ const ChatDetails = () => {
 			</div>
 
 			<div className='outer-box chat-details-members-box'>
-				
-                {isUsersSearchOpen && <UsersSearch onItemClick={addMember} />}
+				{isUsersSearchOpen && <UsersSearch onItemClick={addMember} />}
 
 				<div className='inner-box chat-details-members'>
 					<div className='chat-details-members-bar'>

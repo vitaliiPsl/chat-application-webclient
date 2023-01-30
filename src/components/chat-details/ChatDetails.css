@@ -75,19 +75,24 @@
 }
 
 .chat-details-members-box {
-    min-height: 0;
-    flex: 1;
+	min-height: 0;
+	flex: 1;
 
-    overflow: scroll;
+	overflow: scroll;
 }
 
 .chat-details-members-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 }
 
 .chat-details-members-bar-add-member-icon {
-    width: 36px;
-    height: 36px;
+	width: 36px;
+	height: 36px;
+}
+
+.chat-details-member-options-icon-box {
+	width: 34px;
+	height: 34px;
 }
