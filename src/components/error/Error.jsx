@@ -1,12 +1,16 @@
 import './Error.css'
 
+import MaterialIcon from '../material-icon/MaterialIcon'
+
 const Error = ({ message, onClose }) => {
 	return (
 		<div className='error'>
-			<div className='error-message'>{message}</div>
+			<div className='error-message'>
+				<p>{message}</p>
+			</div>
 
-			<div className='close-btn' onClick={onClose}>
-				<span className='material-symbols-outlined'>close</span>
+			<div className='error-close-icon'>
+				<MaterialIcon icon={'close'} onClick={onClose} />
 			</div>
 		</div>
 	)
