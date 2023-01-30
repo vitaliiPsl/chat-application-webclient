@@ -1,29 +1,39 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-	chat: null,
-	messages: null,
 	chats: [],
+	chat: null,
+    member: null,
+	members: null,
+	messages: null,
 }
 
 export const chatsSlice = createSlice({
 	name: 'chats',
 	initialState,
 	reducers: {
+        setChats: (state, action) => {
+            let chats = action.payload
+            state.chats = chats
+        },
 		setChat: (state, action) => {
 			let chat = action.payload
 			state.chat = chat
 		},
-		setMessages: (state, action) => {
-			let messages = action.payload
-			state.messages = messages
-		},
-		setChats: (state, action) => {
-			let chats = action.payload
-			state.chats = chats
-		},
+        setMember: (state, action) => {
+            let member = action.payload
+            state.member = member
+        },
+        setMembers: (state, action) => {
+            let members = action.payload
+            state.members = members
+        },
+        setMessages: (state, action) => {
+            let messages = action.payload
+            state.messages = messages
+        },
 	},
 })
 
-export const { setChat, setMessages, setChats } = chatsSlice.actions
+export const { setChats, setChat, setMember, setMembers, setMessages } = chatsSlice.actions
 export default chatsSlice.reducer
