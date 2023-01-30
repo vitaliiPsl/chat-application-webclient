@@ -4,17 +4,32 @@ import { useState, useEffect } from 'react'
 
 import { useSelector, useDispatch } from 'react-redux'
 
-import { setChat } from '../../features/chats/chatsSlice'
-import { useGetChatQuery } from '../../features/chats/chatsApi'
+import { setChat, setMember } from '../../features/chats/chatsSlice'
+import {
+	useGetChatQuery,
+	useUpdateChatMutation,
+	useGetChatMemberQuery,
+} from '../../features/chats/chatsApi'
 
 import Avatar from '../avatar/Avatar'
 import Spinner from '../spinner/Spinner'
 import Error from '../error/Error'
 
+import TextField from '../text-field/TextField'
+import Button from '../button/Button'
+import MaterialIcon from '../material-icon/MaterialIcon'
+
 const chatId = 'bb21ec87-18dc-4af0-be5a-9e84641693d0'
 
+const initChatDetails = { name: '', description: '' }
+
 const ChatDetails = () => {
-	const { chat } = useSelector((state) => state.chats)
+	const { user } = useSelector((state) => state.auth)
+
+	const { chat, member } = useSelector((state) => state.chats)
+
+	const [chatDetails, setChatDetails] = useState(initChatDetails)
+	const [isEditMode, setEditMode] = useState()
 
 	const [error, setError] = useState()
 
@@ -26,17 +41,47 @@ const ChatDetails = () => {
 		isLoading: chatIsLoading,
 	} = useGetChatQuery(chatId)
 
+	const [
+		updateChat,
+		{
+			data: updateChatData,
+			error: updateChatError,
+			isLoading: updateChatIsLoading,
+		},
+	] = useUpdateChatMutation()
+
+	const {
+		data: memberData,
+		error: memberError,
+		isLoading: memberIsLoading,
+	} = useGetChatMemberQuery(
+		{ chatId: chatId, userId: user?.id },
+		{ skip: !chat || !user }
+	)
+
 	useEffect(() => {
 		if (chatData) {
 			dispatch(setChat(chatData))
 		}
-	}, [chatData])
+		if (memberData) {
+			dispatch(setMember(memberData))
+		}
+		if (updateChatData) {
+			toggleEditMode()
+		}
+	}, [chatData, memberData, updateChatData])
 
 	useEffect(() => {
 		if (chatError) {
 			handleError(chatError)
 		}
-	}, [chatError])
+		if (memberError) {
+			handleError(memberError)
+		}
+		if (updateChatError) {
+			handleError(updateChatError)
+		}
+	}, [chatError, memberError, updateChatError])
 
 	const handleError = (err) => {
 		console.log(err?.data?.message)
@@ -44,7 +89,30 @@ const ChatDetails = () => {
 		setError((error) => err?.data?.message)
 	}
 
-	return !chat ? (
+	const isMemberOwnerOrAdmin = (member) => {
+		return (
+			member.role.toLowerCase() === 'owner' ||
+			member.role.toLowerCase() === 'admin'
+		)
+	}
+
+	const handleChatUpdateSubmit = (e) => {
+		e.preventDefault()
+
+		updateChat({ chatId, payload: chatDetails })
+	}
+
+	const handleInputChange = (e) => {
+		initChatDetails[e.target.name] = e.target.value
+
+		setChatDetails((chatDetails) => initChatDetails)
+	}
+
+	const toggleEditMode = () => {
+		setEditMode((isEditMode) => !isEditMode)
+	}
+
+	return !chat || !member ? (
 		<Spinner />
 	) : (
 		<div className='chat-details'>
@@ -55,15 +123,29 @@ const ChatDetails = () => {
 					<Avatar size={64} placeholder={chat.name} />
 				</div>
 
-				<div className='inner-box chat-details-info-box'>
+				<form
+					onSubmit={handleChatUpdateSubmit}
+					className='inner-box chat-details-info-box'
+				>
 					<div className='chat-details-info chat-details-info-chat-name-box'>
 						<span className='label chat-details-info-chat-name-label'>
 							Name
 						</span>
 
-						<span className='chat-details-info-chat-name'>
-							{chat.name}
-						</span>
+						{!isEditMode && (
+							<span className='chat-details-info-chat-name'>
+								{chat.name}
+							</span>
+						)}
+
+						{isEditMode && (
+							<TextField
+								name={'name'}
+								placeholder={chat.name}
+								onChange={handleInputChange}
+								required={true}
+							/>
+						)}
 					</div>
 
 					<div className='chat-details-info chat-details-info-chat-description-box'>
@@ -71,11 +153,40 @@ const ChatDetails = () => {
 							Description
 						</span>
 
-						<span className='chat-details-info-chat-description'>
-							{chat.description}
-						</span>
+						{!isEditMode && (
+							<span className='chat-details-info-chat-description'>
+								{chat.description}
+							</span>
+						)}
+
+						{isEditMode && (
+							<TextField
+								name={'description'}
+								placeholder={chat.description}
+								onChange={handleInputChange}
+							/>
+						)}
 					</div>
-				</div>
+
+					{isEditMode && (
+						<Button type={'submit'}>
+							{updateChatIsLoading ? (
+								<Spinner size={19} color='#888' />
+							) : (
+								'Save'
+							)}
+						</Button>
+					)}
+
+					{isMemberOwnerOrAdmin(member) && (
+						<div className='chat-details-info-icon-box'>
+							<MaterialIcon
+								icon={'edit'}
+								onClick={toggleEditMode}
+							/>
+						</div>
+					)}
+				</form>
 			</div>
 		</div>
 	)
