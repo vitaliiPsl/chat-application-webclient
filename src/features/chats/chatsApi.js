@@ -24,6 +24,9 @@ export const chatsApiReducer = apiSlice.injectEndpoints({
 			}),
             invalidatesTags: ['Chat']
 		}),
+        getChatMember: builder.query({
+            query: (args) => `/chats/${args.chatId}/members/${args.userId}`,
+		}),
 		getChatMessages: builder.query({
 			query: (id) => `/chats/${id}/messages`,
 		}),
@@ -43,6 +46,7 @@ export const {
 	useGetChatQuery,
 	useCreateChatMutation,
     useUpdateChatMutation,
+    useGetChatMemberQuery,
 	useGetChatMessagesQuery,
 	useSendMessageMutation,
 } = chatsApiReducer
