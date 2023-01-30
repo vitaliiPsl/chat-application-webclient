@@ -6,14 +6,21 @@ import { useDispatch } from 'react-redux'
 import { logout } from '../../features/auth/authSlice'
 
 import Avatar from '../avatar/Avatar'
+import Dropdown from '../dropdown/Dropdown'
+import MaterialIcon from '../material-icon/MaterialIcon'
 
-const Navbar = ({ user, ...rest }) => {
-	const [open, setOpen] = useState(false)
-
+const Navbar = ({ user }) => {
 	const dispatch = useDispatch()
 
 	const logOut = () => {
 		dispatch(logout())
+	}
+
+	const getDropdownOptions = () => {
+		let options = new Map()
+		options.set('Log out', () => logOut())
+
+		return options
 	}
 
 	return (
@@ -23,35 +30,22 @@ const Navbar = ({ user, ...rest }) => {
 			</div>
 
 			{user && (
-				<div
-					className='profile-box'
-					onClick={() => setOpen((open) => !open)}
-				>
-					<Avatar placeholder={user.nickname} />
+				<Dropdown
+					content={
+						<div className='profile-box'>
+							<Avatar placeholder={user.nickname} />
 
-					<div className='profile-nickname'>{user.nickname}</div>
+							<div className='profile-nickname'>
+								{user.nickname}
+							</div>
 
-					<div className='dropdown-icon'>+</div>
-
-					<div
-						className={`dropdown-box ${
-							open ? 'open' : ''
-						} profile-links-box`}
-					>
-						<li
-							className='dropdown-link profile-link preferences-link'
-							onClick={logOut}
-						>
-							Preferences
-						</li>
-						<li
-							className='dropdown-link profile-link logout-link'
-							onClick={logOut}
-						>
-							Log out
-						</li>
-					</div>
-				</div>
+							<div className='profile-dropdown-icon'>
+								<MaterialIcon icon={'expand_more'} />
+							</div>
+						</div>
+					}
+					options={getDropdownOptions()}
+				/>
 			)}
 		</div>
 	)
