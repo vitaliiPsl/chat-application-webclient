@@ -1,6 +1,6 @@
 import './ChatDetails.css'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 import { useSelector, useDispatch } from 'react-redux'
 
@@ -10,7 +10,10 @@ import {
 	useUpdateChatMutation,
 	useGetChatMemberQuery,
 	useGetChatMembersQuery,
+	useAddChatMemberMutation,
 } from '../../features/chats/chatsApi'
+
+import { useLazyGetUsersByNicknameQuery } from '../../features/users/usersApi'
 
 import Avatar from '../avatar/Avatar'
 import Spinner from '../spinner/Spinner'
@@ -20,6 +23,7 @@ import TextField from '../text-field/TextField'
 import Button from '../button/Button'
 import MaterialIcon from '../material-icon/MaterialIcon'
 import MemberListItem from './MemberListItem'
+import UserListItem from '../chat-new/UserListItem'
 
 const chatId = 'bb21ec87-18dc-4af0-be5a-9e84641693d0'
 
@@ -36,6 +40,10 @@ const ChatDetails = () => {
 
 	const [chatDetails, setChatDetails] = useState(initChatDetails)
 	const [isEditMode, setEditMode] = useState()
+
+	const searchInputRef = useRef()
+	const [isUsersSearchOpen, setUsersSearchOpen] = useState(false)
+	const [usersSearchResult, setUsersSearchResult] = useState([])
 
 	const [error, setError] = useState()
 
@@ -71,6 +79,20 @@ const ChatDetails = () => {
 		isLoading: membersIsLoading,
 	} = useGetChatMembersQuery(chatId, { skip: !chat })
 
+	const [
+		addChatMember,
+		{
+			data: addMemberData,
+			error: addMemberError,
+			isLoading: addMemberIsLoading,
+		},
+	] = useAddChatMemberMutation()
+
+	const [
+		getUsersByNickname,
+		{ data: getUsersData, isLoading: getUsersIsLoading },
+	] = useLazyGetUsersByNicknameQuery()
+
 	useEffect(() => {
 		if (chatData) {
 			dispatch(setChat(chatData))
@@ -84,7 +106,10 @@ const ChatDetails = () => {
 		if (memberData) {
 			dispatch(setMembers(membersData))
 		}
-	}, [chatData, memberData, updateChatData, membersData])
+		if (addMemberData) {
+			console.log(addMemberData)
+		}
+	}, [chatData, memberData, updateChatData, membersData, addMemberData])
 
 	useEffect(() => {
 		if (chatError) {
@@ -99,7 +124,16 @@ const ChatDetails = () => {
 		if (membersError) {
 			handleError(memberError)
 		}
-	}, [chatError, memberError, updateChatError, membersError])
+		if (addMemberError) {
+			handleError(addMemberError)
+		}
+	}, [chatError, memberError, updateChatError, membersError, addMemberError])
+
+	useEffect(() => {
+		if (getUsersData) {
+			setUsersSearchResult((usersSearchResult) => getUsersData)
+		}
+	}, [getUsersData])
 
 	const handleError = (err) => {
 		console.log(err?.data?.message)
@@ -130,12 +164,54 @@ const ChatDetails = () => {
 		setEditMode((isEditMode) => !isEditMode)
 	}
 
+	const addMember = (user) => {
+		let payload = { id: user.id }
+
+		addChatMember({ chatId, payload })
+	}
+
 	const mapMembersToMemberListItems = (members) => {
 		return members.map((member, index) => mapMemberListItem(member, index))
 	}
 
 	const mapMemberListItem = (member, index) => {
 		return <MemberListItem member={member} key={index} />
+	}
+
+	const toggleSearchBox = () => {
+		setUsersSearchOpen((isUsersSearchOpen) => !isUsersSearchOpen)
+	}
+
+	const searchByNickname = () => {
+		let nickname = searchInputRef.current?.value
+
+		if (!nickname || nickname === '') {
+			setUsersSearchResult((searchResult) => [])
+		} else {
+			getUsersByNickname(nickname, false)
+		}
+	}
+
+	const mapUserSearchResults = (searchResult) => {
+		let addIcon = <span className='material-symbols-outlined'>add</span>
+
+		return searchResult
+			.slice(0, 5)
+			.map((user, index) =>
+				mapUserListItem(user, index, addIcon, () => addMember(user))
+			)
+	}
+
+	const mapUserListItem = (user, index, icon, onClick, onIconClick) => {
+		return (
+			<UserListItem
+				user={user}
+				key={index}
+				onClick={onClick}
+				icon={icon}
+				onIconClick={onIconClick}
+			/>
+		)
 	}
 
 	return !chat || !actorMember ? (
@@ -216,11 +292,40 @@ const ChatDetails = () => {
 			</div>
 
 			<div className='outer-box chat-details-members-box'>
+				{isUsersSearchOpen && (
+					<div className='inner-box chat-details-members-new-box'>
+						<label className='chat-details-members-new-users-search-label'>
+							User search
+						</label>
+
+						<TextField
+							type='text'
+							name={'nickname'}
+							placeholder={'Nickname...'}
+							onChange={searchByNickname}
+							reference={searchInputRef}
+						/>
+
+						{usersSearchResult.length > 0 && (
+							<div className={`users-search-result-list`}>
+								{mapUserSearchResults(usersSearchResult)}
+							</div>
+						)}
+					</div>
+				)}
+
 				<div className='inner-box chat-details-members'>
 					<div className='chat-details-members-bar'>
 						<label className='chat-details-members-bar-label'>
 							Chat members
 						</label>
+
+						<div className='chat-details-members-bar-add-member-icon'>
+							<MaterialIcon
+								icon={'person_add'}
+								onClick={toggleSearchBox}
+							/>
+						</div>
 					</div>
 
 					{members && (
