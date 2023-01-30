@@ -13,8 +13,6 @@ import {
 	useAddChatMemberMutation,
 } from '../../features/chats/chatsApi'
 
-import { useLazyGetUsersByNicknameQuery } from '../../features/users/usersApi'
-
 import Avatar from '../avatar/Avatar'
 import Spinner from '../spinner/Spinner'
 import Error from '../error/Error'
@@ -23,7 +21,7 @@ import TextField from '../text-field/TextField'
 import Button from '../button/Button'
 import MaterialIcon from '../material-icon/MaterialIcon'
 import MemberListItem from './MemberListItem'
-import UserListItem from '../chat-new/UserListItem'
+import UsersSearch from '../users-search/UsersSearch'
 
 const chatId = 'bb21ec87-18dc-4af0-be5a-9e84641693d0'
 
@@ -41,9 +39,7 @@ const ChatDetails = () => {
 	const [chatDetails, setChatDetails] = useState(initChatDetails)
 	const [isEditMode, setEditMode] = useState()
 
-	const searchInputRef = useRef()
 	const [isUsersSearchOpen, setUsersSearchOpen] = useState(false)
-	const [usersSearchResult, setUsersSearchResult] = useState([])
 
 	const [error, setError] = useState()
 
@@ -88,11 +84,6 @@ const ChatDetails = () => {
 		},
 	] = useAddChatMemberMutation()
 
-	const [
-		getUsersByNickname,
-		{ data: getUsersData, isLoading: getUsersIsLoading },
-	] = useLazyGetUsersByNicknameQuery()
-
 	useEffect(() => {
 		if (chatData) {
 			dispatch(setChat(chatData))
@@ -128,12 +119,6 @@ const ChatDetails = () => {
 			handleError(addMemberError)
 		}
 	}, [chatError, memberError, updateChatError, membersError, addMemberError])
-
-	useEffect(() => {
-		if (getUsersData) {
-			setUsersSearchResult((usersSearchResult) => getUsersData)
-		}
-	}, [getUsersData])
 
 	const handleError = (err) => {
 		console.log(err?.data?.message)
@@ -180,38 +165,6 @@ const ChatDetails = () => {
 
 	const toggleSearchBox = () => {
 		setUsersSearchOpen((isUsersSearchOpen) => !isUsersSearchOpen)
-	}
-
-	const searchByNickname = () => {
-		let nickname = searchInputRef.current?.value
-
-		if (!nickname || nickname === '') {
-			setUsersSearchResult((searchResult) => [])
-		} else {
-			getUsersByNickname(nickname, false)
-		}
-	}
-
-	const mapUserSearchResults = (searchResult) => {
-		let addIcon = <span className='material-symbols-outlined'>add</span>
-
-		return searchResult
-			.slice(0, 5)
-			.map((user, index) =>
-				mapUserListItem(user, index, addIcon, () => addMember(user))
-			)
-	}
-
-	const mapUserListItem = (user, index, icon, onClick, onIconClick) => {
-		return (
-			<UserListItem
-				user={user}
-				key={index}
-				onClick={onClick}
-				icon={icon}
-				onIconClick={onIconClick}
-			/>
-		)
 	}
 
 	return !chat || !actorMember ? (
@@ -292,27 +245,8 @@ const ChatDetails = () => {
 			</div>
 
 			<div className='outer-box chat-details-members-box'>
-				{isUsersSearchOpen && (
-					<div className='inner-box chat-details-members-new-box'>
-						<label className='chat-details-members-new-users-search-label'>
-							User search
-						</label>
-
-						<TextField
-							type='text'
-							name={'nickname'}
-							placeholder={'Nickname...'}
-							onChange={searchByNickname}
-							reference={searchInputRef}
-						/>
-
-						{usersSearchResult.length > 0 && (
-							<div className={`users-search-result-list`}>
-								{mapUserSearchResults(usersSearchResult)}
-							</div>
-						)}
-					</div>
-				)}
+				
+                {isUsersSearchOpen && <UsersSearch onItemClick={addMember} />}
 
 				<div className='inner-box chat-details-members'>
 					<div className='chat-details-members-bar'>
