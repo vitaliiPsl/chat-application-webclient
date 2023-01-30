@@ -1,0 +1,55 @@
+.member-list-item {
+    min-height: 64px;
+    padding: 8px;
+
+	display: flex;
+	align-items: stretch;
+	justify-content: flex-start;
+	gap: 16px;
+
+	color: #212121;
+	background: #fff;
+
+	border-bottom: 1px solid #46494655;
+
+	cursor: pointer;
+    transition: 0.5s;   
+}
+
+.member-list-item:last-of-type {
+	border-bottom: none;
+}
+
+.member-list-item:hover {
+	background-color: #eee;
+}
+
+.member-avatar-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.member-details-box {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    gap: 4px;
+}
+
+.member-details-nickname {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.member-details-role {
+    text-transform: lowercase;
+    color: #4d4d4d;
+}
+
+.member-options-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
