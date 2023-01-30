@@ -32,14 +32,10 @@ const Chats = () => {
 		// TODO: redirect to chat with given id
 	}
 
-	const mapChatsToChatListItem = (chats) => {
+	const mapChatsToChatListItems = (chats) => {
 		return [...chats]
 			.sort(compareChatsByLastMessage)
-			.map((chat, index) => <ChatListItem chat={chat} key={index} />)
-	}
-
-	const mapChatToChatListItem = (chat, index) => {
-		return <ChatListItem chat={chat} key={index} />
+			.map((chat, index) => mapChatToChatListItem(chat, index))
 	}
 
 	const compareChatsByLastMessage = (chat1, chat2) => {
@@ -51,6 +47,10 @@ const Chats = () => {
 		}
 
 		return Date.parse(chat1.lastMessage) - Date.parse(chat2.lastMessage)
+	}
+
+	const mapChatToChatListItem = (chat, index) => {
+		return <ChatListItem chat={chat} key={index} />
 	}
 
 	return (
@@ -79,7 +79,7 @@ const Chats = () => {
 
 				{!isLoading && chats && (
 					<div className='chats-list'>
-						{mapChatsToChatListItem(chats)}
+						{mapChatsToChatListItems(chats)}
 					</div>
 				)}
 			</div>

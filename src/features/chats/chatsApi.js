@@ -4,6 +4,7 @@ export const chatsApiReducer = apiSlice.injectEndpoints({
 	endpoints: (builder) => ({
 		getChats: builder.query({
 			query: () => '/chats',
+			providesTags: ['Chats'],
 		}),
 		getChat: builder.query({
 			query: (id) => `/chats/${id}`,
@@ -15,6 +16,7 @@ export const chatsApiReducer = apiSlice.injectEndpoints({
 				method: 'post',
 				body: chatDetails,
 			}),
+			invalidatesTags: ['Chats'],
 		}),
 		updateChat: builder.mutation({
 			query: (args) => ({
