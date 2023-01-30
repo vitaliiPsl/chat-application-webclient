@@ -73,3 +73,16 @@
 	width: 30px;
 	height: 30px;
 }
+
+.chat-details-members-box {
+    min-height: 0;
+    flex: 1;
+
+    overflow: scroll;
+}
+
+.chat-details-members-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}

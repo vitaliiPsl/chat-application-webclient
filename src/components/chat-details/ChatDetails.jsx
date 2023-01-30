@@ -4,11 +4,12 @@ import { useState, useEffect } from 'react'
 
 import { useSelector, useDispatch } from 'react-redux'
 
-import { setChat, setMember } from '../../features/chats/chatsSlice'
+import { setChat, setMember, setMembers } from '../../features/chats/chatsSlice'
 import {
 	useGetChatQuery,
 	useUpdateChatMutation,
 	useGetChatMemberQuery,
+	useGetChatMembersQuery,
 } from '../../features/chats/chatsApi'
 
 import Avatar from '../avatar/Avatar'
@@ -18,6 +19,7 @@ import Error from '../error/Error'
 import TextField from '../text-field/TextField'
 import Button from '../button/Button'
 import MaterialIcon from '../material-icon/MaterialIcon'
+import MemberListItem from './MemberListItem'
 
 const chatId = 'bb21ec87-18dc-4af0-be5a-9e84641693d0'
 
@@ -26,7 +28,11 @@ const initChatDetails = { name: '', description: '' }
 const ChatDetails = () => {
 	const { user } = useSelector((state) => state.auth)
 
-	const { chat, member } = useSelector((state) => state.chats)
+	const {
+		chat,
+		member: actorMember,
+		members,
+	} = useSelector((state) => state.chats)
 
 	const [chatDetails, setChatDetails] = useState(initChatDetails)
 	const [isEditMode, setEditMode] = useState()
@@ -59,6 +65,12 @@ const ChatDetails = () => {
 		{ skip: !chat || !user }
 	)
 
+	const {
+		data: membersData,
+		error: membersError,
+		isLoading: membersIsLoading,
+	} = useGetChatMembersQuery(chatId, { skip: !chat })
+
 	useEffect(() => {
 		if (chatData) {
 			dispatch(setChat(chatData))
@@ -69,7 +81,10 @@ const ChatDetails = () => {
 		if (updateChatData) {
 			toggleEditMode()
 		}
-	}, [chatData, memberData, updateChatData])
+		if (memberData) {
+			dispatch(setMembers(membersData))
+		}
+	}, [chatData, memberData, updateChatData, membersData])
 
 	useEffect(() => {
 		if (chatError) {
@@ -81,7 +96,10 @@ const ChatDetails = () => {
 		if (updateChatError) {
 			handleError(updateChatError)
 		}
-	}, [chatError, memberError, updateChatError])
+		if (membersError) {
+			handleError(memberError)
+		}
+	}, [chatError, memberError, updateChatError, membersError])
 
 	const handleError = (err) => {
 		console.log(err?.data?.message)
@@ -112,7 +130,15 @@ const ChatDetails = () => {
 		setEditMode((isEditMode) => !isEditMode)
 	}
 
-	return !chat || !member ? (
+	const mapMembersToMemberListItems = (members) => {
+		return members.map((member, index) => mapMemberListItem(member, index))
+	}
+
+	const mapMemberListItem = (member, index) => {
+		return <MemberListItem member={member} key={index} />
+	}
+
+	return !chat || !actorMember ? (
 		<Spinner />
 	) : (
 		<div className='chat-details'>
@@ -178,7 +204,7 @@ const ChatDetails = () => {
 						</Button>
 					)}
 
-					{isMemberOwnerOrAdmin(member) && (
+					{isMemberOwnerOrAdmin(actorMember) && (
 						<div className='chat-details-info-icon-box'>
 							<MaterialIcon
 								icon={'edit'}
@@ -187,6 +213,22 @@ const ChatDetails = () => {
 						</div>
 					)}
 				</form>
+			</div>
+
+			<div className='outer-box chat-details-members-box'>
+				<div className='inner-box chat-details-members'>
+					<div className='chat-details-members-bar'>
+						<label className='chat-details-members-bar-label'>
+							Chat members
+						</label>
+					</div>
+
+					{members && (
+						<div className='chat-details-members-list'>
+							{mapMembersToMemberListItems(members)}
+						</div>
+					)}
+				</div>
 			</div>
 		</div>
 	)
