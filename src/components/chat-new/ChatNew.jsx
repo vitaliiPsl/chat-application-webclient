@@ -1,8 +1,7 @@
 import './ChatNew.css'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 
-import { useLazyGetUsersByNicknameQuery } from '../../features/users/usersApi'
 import { useCreateChatMutation } from '../../features/chats/chatsApi'
 
 import UserListItem from './UserListItem'
@@ -10,6 +9,7 @@ import Button from '../button/Button'
 import TextField from '../text-field/TextField'
 import Error from '../error/Error'
 import Spinner from '../spinner/Spinner'
+import UsersSearch from '../users-search/UsersSearch'
 
 const initChatDetails = {
 	name: '',
@@ -20,13 +20,7 @@ const ChatNew = () => {
 	const [chatDetails, setChatDetails] = useState(initChatDetails)
 	const [selectedUsers, setSelectedUsers] = useState(new Map())
 
-	const searchInputRef = useRef()
-	const [searchResult, setSearchResult] = useState([])
-
 	const [error, setError] = useState()
-
-	const [trigger, { data: userSearchData, isLoading: isGetUsersLoading }] =
-		useLazyGetUsersByNicknameQuery()
 
 	const [
 		createChat,
@@ -38,15 +32,7 @@ const ChatNew = () => {
 	] = useCreateChatMutation()
 
 	useEffect(() => {
-		if (userSearchData) {
-			setSearchResult((searchResult) => userSearchData)
-		}
-	}, [userSearchData])
-
-	useEffect(() => {
 		if (createChatData) {
-			console.log(createChatData)
-
 			// TODO: redirect to created chat
 		}
 		if (createChatError) {
@@ -75,10 +61,6 @@ const ChatNew = () => {
 		selectedUsersCopy.set(id, user)
 
 		setSelectedUsers((selectedUsers) => selectedUsersCopy)
-
-		// clear search bar and search result list
-		searchInputRef.current.value = ''
-		setSearchResult((searchResult) => [])
 	}
 
 	const removeSelectedUser = (id) => {
@@ -86,28 +68,6 @@ const ChatNew = () => {
 		selectedUsersCopy.delete(id)
 
 		setSelectedUsers((selectedUsers) => selectedUsersCopy)
-	}
-
-	const handleSearchByNickname = (e) => {
-		let nickname = e.target.value
-
-		if (nickname === '') {
-			setSearchResult((searchResult) => [])
-		} else {
-			trigger(nickname, false)
-		}
-	}
-
-	const mapUserSearchResults = (searchResult) => {
-		let addIcon = <span className='material-symbols-outlined'>add</span>
-
-		return searchResult
-			.slice(0, 5)
-			.map((user, index) =>
-				mapUserListItem(user, index, addIcon, () =>
-					addSelectedUser(user)
-				)
-			)
 	}
 
 	const mapSelectedUsers = (selectedUsers) => {
@@ -148,7 +108,7 @@ const ChatNew = () => {
 
 				<form className='chat-new-form'>
 					<div className='outer-box chat-new-details-box'>
-						<div className='inner-box'>
+						<div className='inner-box chat-new-details-name'>
 							<TextField
 								label={'Name'}
 								type='text'
@@ -159,7 +119,7 @@ const ChatNew = () => {
 							/>
 						</div>
 
-						<div className='inner-box'>
+						<div className='inner-box chat-new-details-description'>
 							<TextField
 								label={'Description'}
 								type='text'
@@ -172,32 +132,15 @@ const ChatNew = () => {
 					</div>
 
 					<div className='outer-box chat-new-users-box'>
-						<div className={`inner-box chat-new-users-search-box`}>
-							<label className='users-search-label'>
-								User search
-							</label>
 
-							<TextField
-								type='text'
-								name={'nickname'}
-								placeholder={'Nickname...'}
-								onChange={handleSearchByNickname}
-								reference={searchInputRef}
-							/>
-
-							{searchResult.length > 0 && (
-								<div className={`users-search-result-list`}>
-									{mapUserSearchResults(searchResult)}
-								</div>
-							)}
-						</div>
+						<UsersSearch onItemClick={addSelectedUser} />
 
 						<div className='inner-box chat-new-users-selected-box'>
 							<label className='users-selected-label'>
 								Selected users
 							</label>
 
-							{selectedUsers.size == 0 && (
+							{selectedUsers.size === 0 && (
 								<div className='no-selected-users-box'>
 									<span className='no-selected-users-message'>
 										You need to select at least one user to
@@ -205,7 +148,7 @@ const ChatNew = () => {
 									</span>
 								</div>
 							)}
-                            
+
 							<div className='chat-new-users-selected-list'>
 								{mapSelectedUsers(selectedUsers)}
 							</div>
@@ -214,7 +157,11 @@ const ChatNew = () => {
 				</form>
 
 				<Button onClick={handleSubmit}>
-					{isCreateChatLoading ? <Spinner size={19} color={'#888'} /> : 'Create chat'}
+					{isCreateChatLoading ? (
+						<Spinner size={19} color={'#888'} />
+					) : (
+						'Create chat'
+					)}
 				</Button>
 			</div>
 		</div>
