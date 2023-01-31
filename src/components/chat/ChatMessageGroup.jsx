@@ -7,7 +7,7 @@ const ChatMessageGroup = ({ group, user }) => {
 	let author = group[0]
 	let messages = group[1]
 
-	let isAuthor = user.id == author.id
+	let isAuthor = user.id === author.id
 
 	const mapMessages = () => {
 		return messages?.map((message, index) => (

@@ -25,11 +25,13 @@ import MemberListItem from './MemberListItem'
 import UsersSearch from '../users-search/UsersSearch'
 import Dropdown from '../dropdown/Dropdown'
 
-const chatId = 'bb21ec87-18dc-4af0-be5a-9e84641693d0'
+import { useParams } from 'react-router-dom'
 
 const initChatDetails = { name: '', description: '' }
 
 const ChatDetails = () => {
+    const {chatId} = useParams()
+
 	const { user } = useSelector((state) => state.auth)
 
 	const {

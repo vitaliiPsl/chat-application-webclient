@@ -7,6 +7,8 @@ import { useSelector, useDispatch } from 'react-redux'
 import { setChats } from '../../features/chats/chatsSlice'
 import { useGetChatsQuery } from '../../features/chats/chatsApi'
 
+import { useNavigate } from 'react-router-dom'
+
 import ChatListItem from './ChatListItem'
 import Button from '../button/Button'
 import Spinner from '../spinner/Spinner'
@@ -14,22 +16,23 @@ import Spinner from '../spinner/Spinner'
 const Chats = () => {
 	const { chats } = useSelector((state) => state.chats)
 
-	const dispatch = useDispatch()
-
 	const { data, error, isLoading } = useGetChatsQuery()
+
+	const dispatch = useDispatch()
+	const navigate = useNavigate()
 
 	useEffect(() => {
 		if (data) {
 			dispatch(setChats(data))
 		}
 		if (error) {
-			console.log(error)
 			console.log(error?.data?.message)
 		}
 	}, [data, error])
 
 	const openChat = (id) => {
 		// TODO: redirect to chat with given id
+		navigate(`/chats/${id}`)
 	}
 
 	const mapChatsToChatListItems = (chats) => {
@@ -50,7 +53,13 @@ const Chats = () => {
 	}
 
 	const mapChatToChatListItem = (chat, index) => {
-		return <ChatListItem chat={chat} key={index} />
+		return (
+			<ChatListItem
+				chat={chat}
+				key={index}
+				onClick={() => openChat(chat.id)}
+			/>
+		)
 	}
 
 	return (

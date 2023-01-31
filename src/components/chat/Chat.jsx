@@ -11,21 +11,24 @@ import {
 	useSendMessageMutation,
 } from '../../features/chats/chatsApi'
 
+import { useParams, useNavigate } from 'react-router-dom'
+
 import Avatar from '../avatar/Avatar'
 import TextField from '../text-field/TextField'
 import Button from '../button/Button'
 import Spinner from '../spinner/Spinner'
 import ChatMessageGroup from './ChatMessageGroup'
 
-const chatId = 'bb21ec87-18dc-4af0-be5a-9e84641693d0'
-
 const Chat = () => {
+	const { chatId } = useParams()
+
 	const { user } = useSelector((state) => state.auth)
 	const { chat, messages } = useSelector((state) => state.chats)
 
 	const messageInputRef = useRef()
 
 	const dispatch = useDispatch()
+	const navigate = useNavigate()
 
 	const {
 		data: chatData,
@@ -76,6 +79,10 @@ const Chat = () => {
 			console.log(sendMessageError)
 		}
 	}, [sendMessageData, sendMessageError])
+
+	const openChatDetails = () => {
+		navigate(`/chats/${chatId}/details`)
+	}
 
 	const handleSendMessage = (e) => {
 		e.preventDefault()
@@ -130,7 +137,7 @@ const Chat = () => {
 		<Spinner />
 	) : (
 		<div className='chat'>
-			<div className='chat-info-bar'>
+			<div className='chat-info-bar' onClick={openChatDetails}>
 				<Avatar placeholder={chat.name} />
 				<div className='chat-name'>{chat.name}</div>
 				<div className='chat-options'></div>
