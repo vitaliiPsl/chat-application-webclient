@@ -6,6 +6,7 @@ import { useLazyGetUsersByNicknameQuery } from '../../features/users/usersApi'
 
 import TextField from '../text-field/TextField.jsx'
 import UserListItem from '../chat-new/UserListItem'
+import MaterialIcon from '../material-icon/MaterialIcon.jsx'
 
 const NUMBER_OF_SEARCH_RESULTS = 5
 
@@ -44,20 +45,18 @@ const UsersSearch = ({ onItemClick }) => {
 	}
 
 	const mapUserSearchResults = (usersSearchResult) => {
-		let addIcon = <span className='material-symbols-outlined'>add</span>
-
 		return usersSearchResult
 			.slice(0, NUMBER_OF_SEARCH_RESULTS)
-			.map((user, index) => mapUserListItem(user, index, addIcon))
+			.map((user, index) => mapUserListItem(user, index))
 	}
 
-	const mapUserListItem = (user, index, icon) => {
+	const mapUserListItem = (user, index) => {
 		return (
 			<UserListItem
 				user={user}
 				key={index}
 				onClick={() => handleItemClick(user)}
-				icon={icon}
+				icon={<MaterialIcon icon={'add'} />}
 				onIconClick={() => handleItemClick(user)}
 			/>
 		)

@@ -10,6 +10,7 @@ import TextField from '../text-field/TextField'
 import Error from '../error/Error'
 import Spinner from '../spinner/Spinner'
 import UsersSearch from '../users-search/UsersSearch'
+import MaterialIcon from '../material-icon/MaterialIcon'
 
 const initChatDetails = {
 	name: '',
@@ -63,31 +64,26 @@ const ChatNew = () => {
 		setSelectedUsers((selectedUsers) => selectedUsersCopy)
 	}
 
-	const removeSelectedUser = (id) => {
+	const removeSelectedUser = (user) => {
 		let selectedUsersCopy = new Map(selectedUsers)
-		selectedUsersCopy.delete(id)
+		selectedUsersCopy.delete(user.id)
 
 		setSelectedUsers((selectedUsers) => selectedUsersCopy)
 	}
 
 	const mapSelectedUsers = (selectedUsers) => {
-		let closeIcon = <span className='material-symbols-outlined'>close</span>
-
 		return [...selectedUsers.values()].map((user, index) =>
-			mapUserListItem(user, index, closeIcon, null, () =>
-				removeSelectedUser(user.id)
-			)
+			mapSelectedUserListItem(user, index)
 		)
 	}
 
-	const mapUserListItem = (user, index, icon, onClick, onIconClick) => {
+	const mapSelectedUserListItem = (user, index) => {
 		return (
 			<UserListItem
 				user={user}
 				key={index}
-				onClick={onClick}
-				icon={icon}
-				onIconClick={onIconClick}
+				icon={<MaterialIcon icon={'close'} />}
+				onIconClick={() => removeSelectedUser(user)}
 			/>
 		)
 	}
@@ -132,7 +128,6 @@ const ChatNew = () => {
 					</div>
 
 					<div className='outer-box chat-new-users-box'>
-
 						<UsersSearch onItemClick={addSelectedUser} />
 
 						<div className='inner-box chat-new-users-selected-box'>

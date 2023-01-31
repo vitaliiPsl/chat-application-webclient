@@ -2,21 +2,16 @@ import './UserListItem.css'
 
 import Avatar from '../avatar/Avatar'
 
-const UserListItem = ({ user, onClick, icon, iconSize = 40, onIconClick }) => {
+const UserListItem = ({ user, onClick, icon, onIconClick }) => {
 	return (
 		<div className='user-list-item' onClick={onClick}>
 			<Avatar size={40} placeholder={user.nickname} />
 
-			<div className='user-nickname'>{user.nickname}</div>
+			<div className='user-details-box'>
+				<span className='user-details-nickname'>{user.nickname}</span>
+			</div>
 
-			<div
-				className='icon-box'
-				style={{
-					height: iconSize,
-					width: iconSize,
-				}}
-				onClick={onIconClick}
-			>
+			<div className='user-icon-box' onClick={onIconClick}>
 				{icon}
 			</div>
 		</div>
