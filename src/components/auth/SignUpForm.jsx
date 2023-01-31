@@ -1,6 +1,9 @@
 import './AuthForm.css'
 
 import { useState } from 'react'
+
+import { Link, useNavigate } from 'react-router-dom'
+
 import { useSignUpMutation } from '../../features/auth/authApi'
 
 import TextField from '../text-field/TextField'
@@ -15,12 +18,15 @@ const SignUpForm = () => {
 	const [userDetails, setUserDetails] = useState(initUserDetails)
 	const [error, setError] = useState()
 
+	const navigate = useNavigate()
+
 	const [signUp, { data: signUpData, error: signUpError, isLoading }] =
 		useSignUpMutation()
 
 	useEffect(() => {
 		if (signUpData) {
 			// TODO: redirect to log in page
+            navigate('/auth/signin')
 		}
 		if (signUpError) {
 			setError(() => signUpError?.data?.message)
@@ -89,9 +95,8 @@ const SignUpForm = () => {
 
 				<div className='redirect-box'>
 					<span className='or-span'>or</span>
-					<a href='#' className='redirect-link'>
-						Sign in
-					</a>
+                    
+                    <Link to={'/auth/signin'}>Sign in</Link>
 				</div>
 			</div>
 		</form>

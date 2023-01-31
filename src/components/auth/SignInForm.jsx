@@ -1,6 +1,8 @@
 import './AuthForm.css'
 import { useState, useEffect } from 'react'
 
+import { Link, NavLink, useNavigate } from 'react-router-dom'
+
 import { useDispatch } from 'react-redux'
 
 import { setToken } from '../../features/auth/authSlice'
@@ -18,16 +20,18 @@ const SignInForm = () => {
 	const [error, setError] = useState()
 
 	const dispatch = useDispatch()
+	const navigate = useNavigate()
 
 	const [signIn, { data: signInData, error: signInError, isLoading }] =
 		useSignInMutation()
 
 	useEffect(() => {
 		if (signInData) {
-            let token = signInData?.token
+			let token = signInData?.token
 			dispatch(setToken(token))
 
-            // TODO: redirect to main page
+			// TODO: redirect to main page
+			navigate('/chats')
 		}
 		if (signInError) {
 			setError(signInError?.data?.message)
@@ -85,9 +89,7 @@ const SignInForm = () => {
 
 				<div className='redirect-box'>
 					<span className='or-span'>or</span>
-					<a href='#' className='redirect-link'>
-						Sign up
-					</a>
+					<Link to={'/auth/signup'}>Sign up</Link>
 				</div>
 			</div>
 		</form>
