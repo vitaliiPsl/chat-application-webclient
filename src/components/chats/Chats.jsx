@@ -31,9 +31,12 @@ const Chats = () => {
 	}, [data, error])
 
 	const openChat = (id) => {
-		// TODO: redirect to chat with given id
 		navigate(`/chats/${id}`)
 	}
+
+    const openChatNew = () => {
+        navigate(`/chats/new`)
+    }
 
 	const mapChatsToChatListItems = (chats) => {
 		return [...chats]
@@ -65,7 +68,7 @@ const Chats = () => {
 	return (
 		<div className='chats'>
 			<div className='create-chat-box'>
-				<Button onClick={() => alert('Clicked')}>Create chat</Button>
+				<Button onClick={openChatNew}>Start chat</Button>
 			</div>
 
 			<div className='chats-box'>
