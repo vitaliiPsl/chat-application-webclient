@@ -1,6 +1,6 @@
 import './Chat.css'
 
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 
 import { useSelector, useDispatch } from 'react-redux'
 import { setChat, setMessages } from '../../features/chats/chatsSlice'
@@ -12,7 +12,6 @@ import {
 } from '../../features/chats/chatsApi'
 
 import Avatar from '../avatar/Avatar'
-import ChatMessage from './ ChatMessage'
 import TextField from '../text-field/TextField'
 import Button from '../button/Button'
 import Spinner from '../spinner/Spinner'
@@ -92,15 +91,19 @@ const Chat = () => {
 		messageInputRef.current.value = ''
 	}
 
-	const mapMessagesToMessageGroups = () => {
-		let groups = groupMessages()
+	const mapMessagesToMessageGroups = (messages) => {
+        if (!messages || !messages.length) {
+            return []
+        }
+
+		let groups = groupMessages(messages)
 
 		return [...groups].map((group, index) => (
 			<ChatMessageGroup group={group} user={user} key={index} />
 		))
 	}
 
-    const groupMessages = () => {
+	const groupMessages = (messages) => {
 		let groups = new Map()
 
 		let user = null
@@ -118,9 +121,9 @@ const Chat = () => {
 
 			groupMessages.push(message)
 		}
-        groups.set(user, groupMessages)
 		
-        return groups
+        groups.set(user, groupMessages)
+		return groups
 	}
 
 	return !chat ? (
@@ -135,9 +138,9 @@ const Chat = () => {
 
 			<div className='chat-messages-box'>
 				{messagesIsLoading && <Spinner />}
-				{messages && (
+				{messages && messages.length > 0 && (
 					<div className='chat-messages-list'>
-						{mapMessagesToMessageGroups()}
+						{mapMessagesToMessageGroups(messages)}
 					</div>
 				)}
 			</div>
