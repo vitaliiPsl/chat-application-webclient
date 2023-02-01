@@ -164,12 +164,6 @@ const Chat = () => {
 		<Spinner />
 	) : (
 		<div className='chat'>
-			{/* <div className='chat-info-bar' onClick={openChatDetails}>
-				<Avatar placeholder={chat.name} />
-				<div className='chat-name'>{chat.name}</div>
-				<div className='chat-options'></div>
-			</div> */}
-
 			<ChatBar
 				icon={<Avatar placeholder={chat.name} />}
 				name={chat.name}
