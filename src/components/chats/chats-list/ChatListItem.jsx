@@ -1,6 +1,6 @@
 import './ChatListItem.css'
 
-import Avatar from '../avatar/Avatar'
+import Avatar from '../../avatar/Avatar'
 
 const ChatListItem = ({ chat, onClick }) => {
 	const getLastMessageTimestamp = () => {

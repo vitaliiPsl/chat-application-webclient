@@ -10,18 +10,16 @@ import { Routes, Route } from 'react-router-dom'
 
 import Navbar from './components/navbar/Navbar'
 
-import Layout from './components/layout/Layout'
-
-import Chats from './components/chats/Chats'
-import Chat from './components/chat/Chat'
-import ChatNew from './components/chat-new/ChatNew'
+import ChatsListPage from './pages/chats/ChatsLayoutPage'
+import Chat from './components/chats/chat/Chat'
+import ChatNew from './components/chats/chat-new/ChatNew'
+import ChatDetails from './components/chats/chat-details/ChatDetails'
 
 import AuthPage from './pages/auth/AuthPage'
 
 import SignInForm from './components/auth/SignInForm'
 import SignUpForm from './components/auth/SignUpForm'
-import ChatDetails from './components/chat-details/ChatDetails'
-import ChatsListPage from './pages/chats/ChatsLayoutPage'
+import ProtectedRoute from './pages/ProtectecRoute'
 
 function App() {
 	const { user, token } = useSelector((state) => state.auth)
@@ -48,27 +46,26 @@ function App() {
 	return (
 		<div className='App'>
 			<Navbar user={user} />
-
 			<Routes>
-				<Route path='/'>
-					<Route path='auth'>
-						<Route
-							path='signin'
-							element={
-								<AuthPage>
-									<SignInForm />
-								</AuthPage>
-							}
-						/>
-						<Route
-							path='signup'
-							element={
-								<AuthPage>
-									<SignUpForm />
-								</AuthPage>
-							}
-						/>
-					</Route>
+				<Route path='/auth'>
+					<Route
+						path='signin'
+						element={
+							<AuthPage>
+								<SignInForm />
+							</AuthPage>
+						}
+					/>
+					<Route
+						path='signup'
+						element={
+							<AuthPage>
+								<SignUpForm />
+							</AuthPage>
+						}
+					/>
+				</Route>
+				<Route path='/' element={<ProtectedRoute user={token} />}>
 					<Route path='/chats' element={<ChatsListPage />}>
 						<Route path=':chatId' element={<Chat />} />
 						<Route

@@ -1,7 +1,7 @@
 import './ChatMessageGroup.css'
 
-import Avatar from '../avatar/Avatar'
-import ChatMessage from './ ChatMessage'
+import Avatar from '../../avatar/Avatar'
+import ChatMessage from './ChatMessage'
 
 const ChatMessageGroup = ({ group, user }) => {
 	let author = group[0]

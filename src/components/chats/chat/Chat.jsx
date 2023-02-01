@@ -3,21 +3,25 @@ import './Chat.css'
 import { useEffect, useRef } from 'react'
 
 import { useSelector, useDispatch } from 'react-redux'
-import { setChat, setMessages } from '../../features/chats/chatsSlice'
+import { setChat, setMessages } from '../../../features/chats/chatsSlice'
 
 import {
 	useGetChatQuery,
 	useGetChatMessagesQuery,
 	useSendMessageMutation,
-} from '../../features/chats/chatsApi'
+} from '../../../features/chats/chatsApi'
 
 import { useParams, useNavigate } from 'react-router-dom'
 
-import Avatar from '../avatar/Avatar'
-import TextField from '../text-field/TextField'
-import Button from '../button/Button'
-import Spinner from '../spinner/Spinner'
+import Avatar from '../../avatar/Avatar'
+import TextField from '../../text-field/TextField'
+import Button from '../../button/Button'
+import Spinner from '../../spinner/Spinner'
+import MaterialIcon from '../../material-icon/MaterialIcon'
+import Dropdown from '../../dropdown/Dropdown'
+
 import ChatMessageGroup from './ChatMessageGroup'
+import ChatBar from '../chat-bar/ChatBar'
 
 const Chat = () => {
 	const { chatId } = useParams()
@@ -99,9 +103,9 @@ const Chat = () => {
 	}
 
 	const mapMessagesToMessageGroups = (messages) => {
-        if (!messages || !messages.length) {
-            return []
-        }
+		if (!messages || !messages.length) {
+			return []
+		}
 
 		let groups = groupMessages(messages)
 
@@ -128,20 +132,50 @@ const Chat = () => {
 
 			groupMessages.push(message)
 		}
-		
-        groups.set(user, groupMessages)
+
+		groups.set(user, groupMessages)
 		return groups
+	}
+
+	const leaveChat = () => {}
+
+	const getChatOptionsDropdown = () => {
+		return (
+			<Dropdown
+				content={
+					<div className='chat-options-icon-box'>
+						<MaterialIcon icon={'more_vert'} />
+					</div>
+				}
+				options={getChatOptions()}
+			/>
+		)
+	}
+
+	const getChatOptions = () => {
+		let options = new Map()
+
+		options.set('leave', () => leaveChat())
+
+		return options
 	}
 
 	return !chat ? (
 		<Spinner />
 	) : (
 		<div className='chat'>
-			<div className='chat-info-bar' onClick={openChatDetails}>
+			{/* <div className='chat-info-bar' onClick={openChatDetails}>
 				<Avatar placeholder={chat.name} />
 				<div className='chat-name'>{chat.name}</div>
 				<div className='chat-options'></div>
-			</div>
+			</div> */}
+
+			<ChatBar
+				icon={<Avatar placeholder={chat.name} />}
+				name={chat.name}
+				optionsDropdown={getChatOptionsDropdown()}
+				onClick={openChatDetails}
+			/>
 
 			<div className='chat-messages-box'>
 				{messagesIsLoading && <Spinner />}

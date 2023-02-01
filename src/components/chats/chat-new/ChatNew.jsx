@@ -2,15 +2,15 @@ import './ChatNew.css'
 
 import { useState, useEffect } from 'react'
 
-import { useCreateChatMutation } from '../../features/chats/chatsApi'
+import { useCreateChatMutation } from '../../../features/chats/chatsApi'
 
 import UserListItem from './UserListItem'
-import Button from '../button/Button'
-import TextField from '../text-field/TextField'
-import Error from '../error/Error'
-import Spinner from '../spinner/Spinner'
-import UsersSearch from '../users-search/UsersSearch'
-import MaterialIcon from '../material-icon/MaterialIcon'
+import Button from '../../button/Button'
+import TextField from '../../text-field/TextField'
+import Error from '../../error/Error'
+import Spinner from '../../spinner/Spinner'
+import UsersSearch from '../../users-search/UsersSearch'
+import MaterialIcon from '../../material-icon/MaterialIcon'
 
 const initChatDetails = {
 	name: '',

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 
 import { useSelector, useDispatch } from 'react-redux'
 
-import { setChat, setMember, setMembers } from '../../features/chats/chatsSlice'
+import { setChat, setMember, setMembers } from '../../../features/chats/chatsSlice'
 import {
 	useGetChatQuery,
 	useUpdateChatMutation,
@@ -12,18 +12,18 @@ import {
 	useGetChatMembersQuery,
 	useAddChatMemberMutation,
 	useRemoveChatMemberMutation,
-} from '../../features/chats/chatsApi'
+} from '../../../features/chats/chatsApi'
 
-import Avatar from '../avatar/Avatar'
-import Spinner from '../spinner/Spinner'
-import Error from '../error/Error'
+import Avatar from '../../avatar/Avatar'
+import Spinner from '../../spinner/Spinner'
+import Error from '../../error/Error'
 
-import TextField from '../text-field/TextField'
-import Button from '../button/Button'
-import MaterialIcon from '../material-icon/MaterialIcon'
+import TextField from '../../text-field/TextField'
+import Button from '../../button/Button'
+import MaterialIcon from '../../material-icon/MaterialIcon'
 import MemberListItem from './MemberListItem'
-import UsersSearch from '../users-search/UsersSearch'
-import Dropdown from '../dropdown/Dropdown'
+import UsersSearch from '../../users-search/UsersSearch'
+import Dropdown from '../../dropdown/Dropdown'
 
 import { useParams } from 'react-router-dom'
 

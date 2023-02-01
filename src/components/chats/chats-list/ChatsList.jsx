@@ -1,19 +1,19 @@
-import './Chats.css'
+import './ChatsList.css'
 
 import { useEffect } from 'react'
 
 import { useSelector, useDispatch } from 'react-redux'
 
-import { setChats } from '../../features/chats/chatsSlice'
-import { useGetChatsQuery } from '../../features/chats/chatsApi'
+import { setChats } from '../../../features/chats/chatsSlice'
+import { useGetChatsQuery } from '../../../features/chats/chatsApi'
 
 import { useNavigate } from 'react-router-dom'
 
 import ChatListItem from './ChatListItem'
-import Button from '../button/Button'
-import Spinner from '../spinner/Spinner'
+import Button from '../../button/Button'
+import Spinner from '../../spinner/Spinner'
 
-const Chats = () => {
+const ChatsList = () => {
 	const { chats } = useSelector((state) => state.chats)
 
 	const { data, error, isLoading } = useGetChatsQuery()
@@ -34,9 +34,9 @@ const Chats = () => {
 		navigate(`/chats/${id}`)
 	}
 
-    const openChatNew = () => {
-        navigate(`/chats/new`)
-    }
+	const openChatNew = () => {
+		navigate(`/chats/new`)
+	}
 
 	const mapChatsToChatListItems = (chats) => {
 		return [...chats]
@@ -99,4 +99,4 @@ const Chats = () => {
 	)
 }
 
-export default Chats
+export default ChatsList

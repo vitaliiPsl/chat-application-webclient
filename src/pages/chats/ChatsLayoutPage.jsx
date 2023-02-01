@@ -1,10 +1,10 @@
 import Layout from '../../components/layout/Layout'
-import Chats from '../../components/chats/Chats'
+import ChatsList from '../../components/chats/chats-list/ChatsList'
 
 import { Outlet } from 'react-router-dom'
 
 const ChatsLayoutPage = () => {
-	return <Layout sidePane={<Chats />} content={<Outlet />} />
+	return <Layout sidePane={<ChatsList />} content={<Outlet />} />
 }
 
 export default ChatsLayoutPage

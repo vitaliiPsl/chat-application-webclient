@@ -1,6 +1,6 @@
 import './MemberListItem.css'
 
-import Avatar from '../avatar/Avatar'
+import Avatar from '../../avatar/Avatar'
 
 const MemberListItem = ({ member, onClick, icon, options }) => {
 	return (
