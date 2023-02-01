@@ -1,6 +1,5 @@
 import './Navbar.css'
 
-import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { logout } from '../../features/auth/authSlice'
@@ -30,22 +29,17 @@ const Navbar = ({ user }) => {
 			</div>
 
 			{user && (
-				<Dropdown
-					content={
-						<div className='profile-box'>
-							<Avatar placeholder={user.nickname} />
+				<Dropdown options={getDropdownOptions()}>
+					<div className='profile-box'>
+						<Avatar placeholder={user.nickname} />
 
-							<div className='profile-nickname'>
-								{user.nickname}
-							</div>
+						<div className='profile-nickname'>{user.nickname}</div>
 
-							<div className='profile-dropdown-icon'>
-								<MaterialIcon icon={'expand_more'} />
-							</div>
+						<div className='profile-dropdown-icon'>
+							<MaterialIcon icon={'expand_more'} />
 						</div>
-					}
-					options={getDropdownOptions()}
-				/>
+					</div>
+				</Dropdown>
 			)}
 		</div>
 	)

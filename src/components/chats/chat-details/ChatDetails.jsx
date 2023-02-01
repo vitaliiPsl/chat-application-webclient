@@ -203,14 +203,11 @@ const ChatDetails = () => {
 
 	const getMemberListItemOptionsDropdown = (member) => {
 		return (
-			<Dropdown
-				content={
-					<div className='chat-details-member-options-icon-box'>
-						<MaterialIcon icon={'more_vert'} />
-					</div>
-				}
-				options={getMemberListItemOptions(member)}
-			/>
+			<Dropdown options={getMemberListItemOptions(member)}>
+				<div className='chat-details-member-options-icon-box'>
+					<MaterialIcon icon={'more_vert'} />
+				</div>
+			</Dropdown>
 		)
 	}
 

@@ -3,7 +3,7 @@ import './Dropdown.css'
 
 import DropdownOption from './DropdownOption'
 
-const Dropdown = ({ content, options }) => {
+const Dropdown = ({ options, children }) => {
 	const [isOpen, setOpen] = useState(false)
 
 	const mapDropdownOptions = () => {
@@ -18,7 +18,7 @@ const Dropdown = ({ content, options }) => {
 
 	return (
 		<div className='dropdown' onClick={() => setOpen((isOpen) => !isOpen)}>
-			<div className='dropdown-content-box'>{content}</div>
+			<div className='dropdown-content-box'>{children}</div>
 
 			<div className={`dropdown-options-box ${isOpen ? 'open' : ''}`}>
 				<div className='dropdown-options-list'>

@@ -41,18 +41,17 @@ const ChatBar = ({ icon, chat, onClick }) => {
 	return (
 		<div className='chat-bar'>
 			<div className='chat-bar-icon'>{icon}</div>
-			<div className='chat-bar-name' onClick={onClick}>
+			
+            <div className='chat-bar-name' onClick={onClick}>
 				{chat.name}
 			</div>
+
 			<div className='chat-bar-options'>
-				<Dropdown
-					content={
-						<div className='chat-options-icon-box'>
-							<MaterialIcon icon={'more_vert'} />
-						</div>
-					}
-					options={getChatOptions()}
-				/>
+				<Dropdown options={getChatOptions()}>
+					<div className='chat-options-icon-box'>
+						<MaterialIcon icon={'more_vert'} />
+					</div>
+				</Dropdown>
 			</div>
 		</div>
 	)
