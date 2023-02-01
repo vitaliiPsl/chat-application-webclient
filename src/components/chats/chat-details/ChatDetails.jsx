@@ -55,7 +55,7 @@ const ChatDetails = () => {
 	const [error, setError] = useState()
 
 	const dispatch = useDispatch()
-    const navigate = useNavigate()
+	const navigate = useNavigate()
 
 	const {
 		data: chatData,
@@ -230,103 +230,117 @@ const ChatDetails = () => {
 		<Spinner />
 	) : (
 		<div className='chat-details'>
-			<ChatBar icon={<MaterialIcon icon={'arrow_back'} onClick={() => navigate(-1)}/>} chat={chat} />
+			<ChatBar
+				icon={
+					<MaterialIcon
+						icon={'arrow_back'}
+						onClick={() => navigate(-1)}
+					/>
+				}
+				chat={chat}
+			/>
 
-			{error && <Error message={error} onClose={() => setError(null)} />}
+			<div className='chat-details-content'>
+				{error && (
+					<Error message={error} onClose={() => setError(null)} />
+				)}
 
-			<div className='outer-box chat-details-box'>
-				<div className='inner-box chat-details-avatar-box'>
-					<Avatar size={64} placeholder={chat.name} />
+				<div className='outer-box chat-details-box'>
+					<div className='inner-box chat-details-avatar-box'>
+						<Avatar size={64} placeholder={chat.name} />
+					</div>
+
+					<form
+						onSubmit={handleChatUpdateSubmit}
+						className='inner-box chat-details-info-box'
+					>
+						<div className='chat-details-info chat-details-info-chat-name-box'>
+							<span className='label chat-details-info-chat-name-label'>
+								Name
+							</span>
+
+							{!isEditMode && (
+								<span className='chat-details-info-chat-name'>
+									{chat.name}
+								</span>
+							)}
+
+							{isEditMode && (
+								<TextField
+									name={'name'}
+									placeholder={chat.name}
+									onChange={handleInputChange}
+									required={true}
+								/>
+							)}
+						</div>
+
+						<div className='chat-details-info chat-details-info-chat-description-box'>
+							<span className='label chat-details-info-chat-description-label'>
+								Description
+							</span>
+
+							{!isEditMode && (
+								<span className='chat-details-info-chat-description'>
+									{chat.description}
+								</span>
+							)}
+
+							{isEditMode && (
+								<TextField
+									name={'description'}
+									placeholder={chat.description}
+									onChange={handleInputChange}
+								/>
+							)}
+						</div>
+
+						{isEditMode && (
+							<Button type={'submit'}>
+								{updateChatIsLoading ? (
+									<Spinner size={19} color='#888' />
+								) : (
+									'Save'
+								)}
+							</Button>
+						)}
+
+						{isMemberOwnerOrAdmin(actorMember) && (
+							<div className='chat-details-info-icon-box'>
+								<MaterialIcon
+									icon={'edit'}
+									onClick={toggleEditMode}
+								/>
+							</div>
+						)}
+					</form>
 				</div>
 
-				<form
-					onSubmit={handleChatUpdateSubmit}
-					className='inner-box chat-details-info-box'
-				>
-					<div className='chat-details-info chat-details-info-chat-name-box'>
-						<span className='label chat-details-info-chat-name-label'>
-							Name
-						</span>
-
-						{!isEditMode && (
-							<span className='chat-details-info-chat-name'>
-								{chat.name}
-							</span>
-						)}
-
-						{isEditMode && (
-							<TextField
-								name={'name'}
-								placeholder={chat.name}
-								onChange={handleInputChange}
-								required={true}
-							/>
-						)}
-					</div>
-
-					<div className='chat-details-info chat-details-info-chat-description-box'>
-						<span className='label chat-details-info-chat-description-label'>
-							Description
-						</span>
-
-						{!isEditMode && (
-							<span className='chat-details-info-chat-description'>
-								{chat.description}
-							</span>
-						)}
-
-						{isEditMode && (
-							<TextField
-								name={'description'}
-								placeholder={chat.description}
-								onChange={handleInputChange}
-							/>
-						)}
-					</div>
-
-					{isEditMode && (
-						<Button type={'submit'}>
-							{updateChatIsLoading ? (
-								<Spinner size={19} color='#888' />
-							) : (
-								'Save'
-							)}
-						</Button>
+				<div className='outer-box chat-details-members-box'>
+					{isUsersSearchOpen && (
+						<UsersSearch onItemClick={addMember} />
 					)}
 
-					{isMemberOwnerOrAdmin(actorMember) && (
-						<div className='chat-details-info-icon-box'>
-							<MaterialIcon
-								icon={'edit'}
-								onClick={toggleEditMode}
-							/>
+					<div className='inner-box chat-details-members'>
+						<div className='chat-details-members-bar'>
+							<label className='chat-details-members-bar-label'>
+								Chat members
+							</label>
+
+							<div className='chat-details-members-bar-add-member-icon'>
+								<MaterialIcon
+									icon={'person_add'}
+									onClick={toggleSearchBox}
+								/>
+							</div>
 						</div>
-					)}
-				</form>
-			</div>
 
-			<div className='outer-box chat-details-members-box'>
-				{isUsersSearchOpen && <UsersSearch onItemClick={addMember} />}
-
-				<div className='inner-box chat-details-members'>
-					<div className='chat-details-members-bar'>
-						<label className='chat-details-members-bar-label'>
-							Chat members
-						</label>
-
-						<div className='chat-details-members-bar-add-member-icon'>
-							<MaterialIcon
-								icon={'person_add'}
-								onClick={toggleSearchBox}
-							/>
-						</div>
+						{members && (
+							<div className='chat-details-members-list'>
+								{mapMembersToMemberListItems(members)}
+							</div>
+						)}
 					</div>
-
-					{members && (
-						<div className='chat-details-members-list'>
-							{mapMembersToMemberListItems(members)}
-						</div>
-					)}
 				</div>
 			</div>
 		</div>
