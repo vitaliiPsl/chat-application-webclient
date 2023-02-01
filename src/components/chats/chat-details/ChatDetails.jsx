@@ -2,9 +2,16 @@ import './ChatDetails.css'
 
 import { useState, useEffect } from 'react'
 
+import { useParams, useNavigate } from 'react-router-dom'
+
 import { useSelector, useDispatch } from 'react-redux'
 
-import { setChat, setMember, setMembers } from '../../../features/chats/chatsSlice'
+import {
+	setChat,
+	setMember,
+	setMembers,
+} from '../../../features/chats/chatsSlice'
+
 import {
 	useGetChatQuery,
 	useUpdateChatMutation,
@@ -25,12 +32,12 @@ import MemberListItem from './MemberListItem'
 import UsersSearch from '../../users-search/UsersSearch'
 import Dropdown from '../../dropdown/Dropdown'
 
-import { useParams } from 'react-router-dom'
+import ChatBar from '../chat-bar/ChatBar'
 
 const initChatDetails = { name: '', description: '' }
 
 const ChatDetails = () => {
-    const {chatId} = useParams()
+	const { chatId } = useParams()
 
 	const { user } = useSelector((state) => state.auth)
 
@@ -48,6 +55,7 @@ const ChatDetails = () => {
 	const [error, setError] = useState()
 
 	const dispatch = useDispatch()
+    const navigate = useNavigate()
 
 	const {
 		data: chatData,
@@ -222,6 +230,8 @@ const ChatDetails = () => {
 		<Spinner />
 	) : (
 		<div className='chat-details'>
+			<ChatBar icon={<MaterialIcon icon={'arrow_back'} onClick={() => navigate(-1)}/>} chat={chat} />
+
 			{error && <Error message={error} onClose={() => setError(null)} />}
 
 			<div className='outer-box chat-details-box'>
