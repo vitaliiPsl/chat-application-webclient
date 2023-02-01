@@ -137,37 +137,13 @@ const Chat = () => {
 		return groups
 	}
 
-	const leaveChat = () => {}
-
-	const getChatOptionsDropdown = () => {
-		return (
-			<Dropdown
-				content={
-					<div className='chat-options-icon-box'>
-						<MaterialIcon icon={'more_vert'} />
-					</div>
-				}
-				options={getChatOptions()}
-			/>
-		)
-	}
-
-	const getChatOptions = () => {
-		let options = new Map()
-
-		options.set('leave', () => leaveChat())
-
-		return options
-	}
-
 	return !chat ? (
 		<Spinner />
 	) : (
 		<div className='chat'>
 			<ChatBar
 				icon={<Avatar placeholder={chat.name} />}
-				name={chat.name}
-				optionsDropdown={getChatOptionsDropdown()}
+				chat={chat}
 				onClick={openChatDetails}
 			/>
 

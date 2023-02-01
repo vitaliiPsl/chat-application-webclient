@@ -2,7 +2,7 @@
 	padding: 8px 16px;
 
 	display: flex;
-	align-items: center;
+	align-items: stretch;
 	justify-content: space-between;
 	gap: 8px;
 
@@ -12,7 +12,7 @@
 	cursor: pointer;
 }
 
-.chat-bar-icon, .chat-bar-options {
+.chat-bar-icon, .chat-bar-name, .chat-bar-options {
     min-width: 80px;
 
     display: flex;
@@ -20,12 +20,12 @@
     align-items: center;
 }
 
-.chat-bar-options {
-    width: 32px;
-    height: 32px;
-}
-
 .chat-bar-name {
     flex: 1;
     text-align: center;
+}
+
+.chat-bar-options {
+    width: 32px;
+    height: 32px;
 }
