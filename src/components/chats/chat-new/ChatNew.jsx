@@ -1,6 +1,6 @@
 import './ChatNew.css'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 
 import { useCreateChatMutation } from '../../../features/chats/chatsApi'
 
@@ -11,6 +11,7 @@ import Error from '../../error/Error'
 import Spinner from '../../spinner/Spinner'
 import UsersSearch from '../../users-search/UsersSearch'
 import MaterialIcon from '../../material-icon/MaterialIcon'
+import { useNavigate } from 'react-router-dom'
 
 const initChatDetails = {
 	name: '',
@@ -23,30 +24,27 @@ const ChatNew = () => {
 
 	const [error, setError] = useState()
 
-	const [
-		createChat,
-		{
-			data: createChatData,
-			error: createChatError,
-			isLoading: isCreateChatLoading,
-		},
-	] = useCreateChatMutation()
+	const navigate = useNavigate()
 
-	useEffect(() => {
-		if (createChatData) {
-			// TODO: redirect to created chat
-		}
-		if (createChatError) {
-			setError(() => createChatError?.data?.message)
-		}
-	}, [createChatData, createChatError])
+	const [createChat, { isLoading: isCreateChatLoading }] =
+		useCreateChatMutation()
 
-	const handleSubmit = () => {
+	const handleSubmit = async () => {
 		chatDetails['users'] = [...selectedUsers.keys()].map((id) => {
 			return { id }
 		})
 
-		createChat(chatDetails)
+		try {
+			let res = await createChat(chatDetails).unwrap()
+			navigate(`/chats/${res.id}`)
+		} catch (err) {
+			handleError(err)
+		}
+	}
+
+	const handleError = (err) => {
+		console.log(err)
+		setError((error) => err?.data?.message)
 	}
 
 	const handleInputChange = (e) => {
