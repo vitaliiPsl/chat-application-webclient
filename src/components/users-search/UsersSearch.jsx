@@ -5,7 +5,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useLazyGetUsersByNicknameQuery } from '../../features/users/usersApi'
 
 import TextField from '../text-field/TextField.jsx'
-import UserListItem from '../chat-new/UserListItem'
+import UserListItem from '../chats/chat-new/UserListItem'
 import MaterialIcon from '../material-icon/MaterialIcon.jsx'
 
 const NUMBER_OF_SEARCH_RESULTS = 5
