@@ -22,6 +22,7 @@ import Dropdown from '../../dropdown/Dropdown'
 
 import ChatMessageGroup from './ChatMessageGroup'
 import ChatBar from '../chat-bar/ChatBar'
+import { toBeEmpty } from '@testing-library/jest-dom/dist/matchers'
 
 const Chat = () => {
 	const { chatId } = useParams()
@@ -149,10 +150,17 @@ const Chat = () => {
 
 			<div className='chat-messages-box'>
 				{messagesIsLoading && <Spinner />}
+
 				{messages && messages.length > 0 && (
 					<div className='chat-messages-list'>
 						{mapMessagesToMessageGroups(messages)}
 					</div>
+				)}
+
+				{messages && messages.length == 0 && (
+					<div className='chat-messages-list-empty'>
+                        No messages yet. Be the one to write the first message
+                    </div>
 				)}
 			</div>
 
