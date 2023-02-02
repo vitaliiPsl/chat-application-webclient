@@ -26,6 +26,13 @@ export const chatsApiReducer = apiSlice.injectEndpoints({
 			}),
 			invalidatesTags: ['Chat'],
 		}),
+		deleteChat: builder.mutation({
+			query: (chatId) => ({
+				url: `/chats/${chatId}`,
+				method: 'delete',
+			}),
+            invalidatesTags: ['Chats']
+		}),
 		getChatMember: builder.query({
 			query: (args) => `/chats/${args.chatId}/members/${args.userId}`,
 		}),
@@ -50,6 +57,7 @@ export const chatsApiReducer = apiSlice.injectEndpoints({
 		}),
 		getChatMessages: builder.query({
 			query: (id) => `/chats/${id}/messages`,
+			providesTags: ['Messages'],
 		}),
 		// TODO: remove after ws connection is implemented
 		sendMessage: builder.mutation({
@@ -67,6 +75,7 @@ export const {
 	useGetChatQuery,
 	useCreateChatMutation,
 	useUpdateChatMutation,
+    useDeleteChatMutation,
 	useGetChatMemberQuery,
 	useGetChatMembersQuery,
 	useAddChatMemberMutation,
