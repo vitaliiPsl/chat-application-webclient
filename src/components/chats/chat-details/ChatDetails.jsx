@@ -15,6 +15,7 @@ import {
 import {
 	useGetChatQuery,
 	useUpdateChatMutation,
+	useDeleteChatMutation,
 	useGetChatMemberQuery,
 	useGetChatMembersQuery,
 	useAddChatMemberMutation,
@@ -63,14 +64,11 @@ const ChatDetails = () => {
 		isLoading: chatIsLoading,
 	} = useGetChatQuery(chatId)
 
-	const [
-		updateChat,
-		{
-			data: updateChatData,
-			error: updateChatError,
-			isLoading: updateChatIsLoading,
-		},
-	] = useUpdateChatMutation()
+	const [updateChatQuery, { isLoading: updateChatIsLoading }] =
+		useUpdateChatMutation()
+
+	const [deleteChatQuery, { isLoading: deleteChatQueryIsLoading }] =
+		useDeleteChatMutation()
 
 	const {
 		data: memberData,
@@ -85,21 +83,13 @@ const ChatDetails = () => {
 		data: membersData,
 		error: membersError,
 		isLoading: membersIsLoading,
-	} = useGetChatMembersQuery(chatId, { skip: !chat })
+	} = useGetChatMembersQuery(chatId, { skip: !chat || !actorMember })
 
-	const [
-		addChatMember,
-		{
-			data: addMemberData,
-			error: addMemberError,
-			isLoading: addMemberIsLoading,
-		},
-	] = useAddChatMemberMutation()
+	const [addChatMemberQuery, { isLoading: addMemberIsLoading }] =
+		useAddChatMemberMutation()
 
-	const [
-		removeChatMember,
-		{ error: removeMemberError, isLoading: removeMemberIsLoading },
-	] = useRemoveChatMemberMutation()
+	const [removeChatMemberQuery, { isLoading: removeMemberQueryIsLoading }] =
+		useRemoveChatMemberMutation()
 
 	useEffect(() => {
 		if (chatData) {
@@ -108,13 +98,10 @@ const ChatDetails = () => {
 		if (memberData) {
 			dispatch(setMember(memberData))
 		}
-		if (updateChatData) {
-			toggleEditMode()
-		}
-		if (memberData) {
+		if (membersData) {
 			dispatch(setMembers(membersData))
 		}
-	}, [chatData, memberData, updateChatData, membersData, addMemberData])
+	}, [chatData, memberData, membersData])
 
 	useEffect(() => {
 		if (chatError) {
@@ -123,26 +110,10 @@ const ChatDetails = () => {
 		if (memberError) {
 			handleError(memberError)
 		}
-		if (updateChatError) {
-			handleError(updateChatError)
-		}
 		if (membersError) {
 			handleError(memberError)
 		}
-		if (addMemberError) {
-			handleError(addMemberError)
-		}
-		if (removeMemberError) {
-			handleError(removeMemberError)
-		}
-	}, [
-		chatError,
-		memberError,
-		updateChatError,
-		membersError,
-		addMemberError,
-		removeMemberError,
-	])
+	}, [chatError, memberError, membersError])
 
 	const handleError = (err) => {
 		console.log(err?.data?.message)
@@ -150,17 +121,60 @@ const ChatDetails = () => {
 		setError((error) => err?.data?.message)
 	}
 
+	const updateChat = async (e) => {
+		e.preventDefault()
+
+		try {
+			await updateChatQuery({ chatId, payload: chatDetails }).unwrap()
+		} catch (err) {
+			handleError(err)
+		}
+	}
+
+	const deleteChat = async (chat) => {
+		try {
+			await deleteChatQuery(chat.id)
+			navigate('/chats')
+		} catch (err) {
+			handleError(err)
+		}
+	}
+
+	const addChatMember = async (user) => {
+		let payload = { id: user.id }
+		try {
+			await addChatMemberQuery({ chatId, payload }).unwrap()
+		} catch (err) {
+			handleError(err)
+		}
+	}
+
+	const leaveChat = async (member) => {
+		let payload = { chatId: chat.id, userId: member.user.id }
+
+		try {
+			await removeChatMemberQuery(payload).unwrap()
+			navigate('/chats')
+		} catch (err) {
+			handleError(err)
+		}
+	}
+
+	const removeChatMember = async (member) => {
+		let payload = { chatId: chat.id, userId: member.user.id }
+
+		try {
+			await removeChatMemberQuery(payload).unwrap()
+		} catch (err) {
+			handleError(err)
+		}
+	}
+
 	const isMemberOwnerOrAdmin = (member) => {
 		return (
 			member.role.toLowerCase() === 'owner' ||
 			member.role.toLowerCase() === 'admin'
 		)
-	}
-
-	const handleChatUpdateSubmit = (e) => {
-		e.preventDefault()
-
-		updateChat({ chatId, payload: chatDetails })
 	}
 
 	const handleInputChange = (e) => {
@@ -171,16 +185,6 @@ const ChatDetails = () => {
 
 	const toggleEditMode = () => {
 		setEditMode((isEditMode) => !isEditMode)
-	}
-
-	const addMember = (user) => {
-		let payload = { id: user.id }
-
-		addChatMember({ chatId, payload })
-	}
-
-	const removeMember = (user) => {
-		removeChatMember({ chatId, userId: user.id })
 	}
 
 	const mapMembersToMemberListItems = (members) => {
@@ -214,13 +218,35 @@ const ChatDetails = () => {
 	const getMemberListItemOptions = (member) => {
 		let options = new Map()
 
-		options.set('remove', () => removeMember(member.user))
+		options.set('remove', () => removeChatMember(member))
 
 		return options
 	}
 
 	const toggleSearchBox = () => {
 		setUsersSearchOpen((isUsersSearchOpen) => !isUsersSearchOpen)
+	}
+
+	const getChatBarDropdown = () => {
+		return (
+			<Dropdown options={getChatBarDropdownOptions()}>
+				<div className='chat-options-icon-box'>
+					<MaterialIcon icon={'more_vert'} />
+				</div>
+			</Dropdown>
+		)
+	}
+
+	const getChatBarDropdownOptions = () => {
+		let options = new Map()
+
+		options.set('leave', () => leaveChat(actorMember))
+
+		if (isMemberOwnerOrAdmin(actorMember)) {
+			options.set('delete', () => deleteChat(chat))
+		}
+
+		return options
 	}
 
 	return !chat || !actorMember ? (
@@ -235,6 +261,7 @@ const ChatDetails = () => {
 					/>
 				}
 				chat={chat}
+				dropdown={getChatBarDropdown()}
 			/>
 
 			<div className='chat-details-content'>
@@ -248,7 +275,7 @@ const ChatDetails = () => {
 					</div>
 
 					<form
-						onSubmit={handleChatUpdateSubmit}
+						onSubmit={updateChat}
 						className='inner-box chat-details-info-box'
 					>
 						<div className='chat-details-info chat-details-info-chat-name-box'>
@@ -315,7 +342,7 @@ const ChatDetails = () => {
 
 				<div className='outer-box chat-details-members-box'>
 					{isUsersSearchOpen && (
-						<UsersSearch onItemClick={addMember} />
+						<UsersSearch onItemClick={addChatMember} />
 					)}
 
 					<div className='inner-box chat-details-members'>
