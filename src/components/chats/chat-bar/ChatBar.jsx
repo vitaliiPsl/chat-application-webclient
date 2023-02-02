@@ -3,9 +3,8 @@ import './ChatBar.css'
 import Dropdown from '../../dropdown/Dropdown'
 import MaterialIcon from '../../material-icon/MaterialIcon'
 
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { useRemoveChatMemberMutation } from '../../../features/chats/chatsApi'
-import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 const ChatBar = ({ icon, chat, onClick }) => {
@@ -13,22 +12,19 @@ const ChatBar = ({ icon, chat, onClick }) => {
 
 	const navigate = useNavigate()
 
-	const [removeChatMember, { data, error, isLoading }] =
+	const [removeChatMember, { isLoading }] =
 		useRemoveChatMemberMutation()
 
-	useEffect(() => {
-		if (data) {
-			navigate('/chats')
-		}
-		if (error) {
-			console.log(error?.data?.message)
-		}
-	}, [data, error])
-
-	const leaveChat = () => {
+	const leaveChat = async () => {
 		let payload = { chatId: chat.id, userId: user.id }
 
-		removeChatMember(payload)
+		try {
+			await removeChatMember(payload).unwrap()
+			navigate('/chats')
+		} catch (err) {
+			console.log(err)
+			console.log(err?.data?.message)
+		}
 	}
 
 	const getChatOptions = () => {
@@ -41,8 +37,8 @@ const ChatBar = ({ icon, chat, onClick }) => {
 	return (
 		<div className='chat-bar'>
 			<div className='chat-bar-icon'>{icon}</div>
-			
-            <div className='chat-bar-name' onClick={onClick}>
+
+			<div className='chat-bar-name' onClick={onClick}>
 				{chat.name}
 			</div>
 

@@ -46,7 +46,7 @@ export const chatsApiReducer = apiSlice.injectEndpoints({
 				url: `/chats/${args.chatId}/members/${args.userId}`,
 				method: 'delete',
 			}),
-			invalidatesTags: ['Members'],
+			invalidatesTags: ['Members', 'Chats'],
 		}),
 		getChatMessages: builder.query({
 			query: (id) => `/chats/${id}/messages`,
