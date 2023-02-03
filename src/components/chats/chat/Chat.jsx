@@ -3,11 +3,14 @@ import './Chat.css'
 import { useEffect, useRef } from 'react'
 
 import { useSelector, useDispatch } from 'react-redux'
-import { setChat, setMessages } from '../../../features/chats/chatsSlice'
+import {
+	setChat,
+	setMessages,
+} from '../../../features/chats/chatsSlice'
 
 import {
 	useGetChatQuery,
-	useGetChatMessagesQuery,
+	useLazyGetChatMessagesQuery,
 	useSendMessageMutation,
 } from '../../../features/chats/chatsApi'
 
@@ -17,12 +20,9 @@ import Avatar from '../../avatar/Avatar'
 import TextField from '../../text-field/TextField'
 import Button from '../../button/Button'
 import Spinner from '../../spinner/Spinner'
-import MaterialIcon from '../../material-icon/MaterialIcon'
-import Dropdown from '../../dropdown/Dropdown'
 
 import ChatMessageGroup from './ChatMessageGroup'
 import ChatBar from '../chat-bar/ChatBar'
-import { toBeEmpty } from '@testing-library/jest-dom/dist/matchers'
 
 const Chat = () => {
 	const { chatId } = useParams()
@@ -39,51 +39,43 @@ const Chat = () => {
 		data: chatData,
 		error: chatError,
 		isLoading: chatIsLoading,
-	} = useGetChatQuery(chatId)
-
-	const {
-		data: messagesData,
-		error: messagesError,
-		isLoading: messagesIsLoading,
-	} = useGetChatMessagesQuery(chatId, {
-		skip: !chat,
+	} = useGetChatQuery(chatId, {
+		refetchOnFocus: false,
+		refetchOnMountOrArgChange: false,
+		refetchOnReconnect: false,
 	})
 
 	const [
-		sendMessage,
+		getChatMessagesQuery,
 		{
-			data: sendMessageData,
-			error: sendMessageError,
-			sendMessageIsLoading,
+			data: messagesData,
+			error: messagesError,
+			isLoading: messagesIsLoading,
 		},
-	] = useSendMessageMutation()
+	] = useLazyGetChatMessagesQuery()
+
+	const [sendMessageQuery, { sendMessageIsLoading }] =
+		useSendMessageMutation()
 
 	useEffect(() => {
 		if (chatData) {
+            // set chat
 			dispatch(setChat(chatData))
+            
+            // fetch messages
+			getChatMessagesQuery(chatId, false)
 		}
 		if (chatError) {
 			console.log(chatError?.data?.message)
 		}
-	}, [chatData, chatError])
-
-	useEffect(() => {
 		if (messagesData) {
+            // set messages
 			dispatch(setMessages(messagesData.content))
 		}
 		if (messagesError) {
 			console.log(chatError?.data?.message)
 		}
-	}, [messagesData, messagesError])
-
-	useEffect(() => {
-		if (sendMessageData) {
-			console.log(sendMessageData)
-		}
-		if (sendMessageError) {
-			console.log(sendMessageError)
-		}
-	}, [sendMessageData, sendMessageError])
+	}, [chatData, chatError, messagesData, messagesError])
 
 	const openChatDetails = () => {
 		navigate(`/chats/${chatId}/details`)
@@ -93,14 +85,23 @@ const Chat = () => {
 		e.preventDefault()
 
 		let content = messageInputRef.current.value
+		messageInputRef.current.value = ''
 
-		if (content && content.trim()) {
-			let message = { content }
-			console.log(message)
-			sendMessage({ id: chatId, message })
+		if (!content || !content.trim()) {
+			return
 		}
 
-		messageInputRef.current.value = ''
+		sendMessage(content)
+	}
+
+	const sendMessage = async (content) => {
+		let message = { content }
+
+		try {
+			await sendMessageQuery({ id: chatId, message }, false).unwrap()
+		} catch (err) {
+			console.log(err)
+		}
 	}
 
 	const mapMessagesToMessageGroups = (messages) => {
@@ -157,10 +158,10 @@ const Chat = () => {
 					</div>
 				)}
 
-				{messages && messages.length == 0 && (
+				{messages && messages.length === 0 && (
 					<div className='chat-messages-list-empty'>
-                        No messages yet. Be the one to write the first message
-                    </div>
+						No messages yet. Be the one to write the first message
+					</div>
 				)}
 			</div>
 
