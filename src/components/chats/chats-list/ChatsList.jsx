@@ -16,7 +16,9 @@ import Spinner from '../../spinner/Spinner'
 const ChatsList = () => {
 	const { chats } = useSelector((state) => state.chats)
 
-	const { data, error, isLoading } = useGetChatsQuery()
+	const { data, error, isLoading } = useGetChatsQuery(null, {
+		pollingInterval: 3000,
+	})
 
 	const dispatch = useDispatch()
 	const navigate = useNavigate()
@@ -52,7 +54,7 @@ const ChatsList = () => {
 			return -1
 		}
 
-		return Date.parse(chat1.lastMessage) - Date.parse(chat2.lastMessage)
+		return Date.parse(chat2.lastMessage.sentAt) - Date.parse(chat1.lastMessage.sentAt)
 	}
 
 	const mapChatToChatListItem = (chat, index) => {
