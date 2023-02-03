@@ -32,8 +32,14 @@ export const chatsSlice = createSlice({
             let messages = action.payload
             state.messages = messages
         },
+        addMessage: (state, action) => {
+            let message = action.payload
+            let messagesCopy = state.messages
+
+            state.messages = [message, ...messagesCopy]
+        }
 	},
 })
 
-export const { setChats, setChat, setMember, setMembers, setMessages } = chatsSlice.actions
+export const { setChats, setChat, setMember, setMembers, setMessages, addMessage} = chatsSlice.actions
 export default chatsSlice.reducer
