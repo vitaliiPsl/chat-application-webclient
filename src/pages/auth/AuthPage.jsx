@@ -1,7 +1,5 @@
-import './AuthPage.css'
-
 const AuthPage = ({ children }) => {
-	return <div className={'auth-page'}>{children}</div>
+	return <div className={'auth-page h-full flex-1 flex items-center justify-center'}>{children}</div>
 }
 
 export default AuthPage
