@@ -10,7 +10,7 @@ import { Routes, Route } from 'react-router-dom'
 
 import Navbar from './components/navbar/Navbar'
 
-import ChatsListPage from './pages/chats/ChatsLayoutPage'
+import ChatsPage from './pages/chats/ChatsPage'
 import Chat from './components/chats/chat/Chat'
 import ChatNew from './components/chats/chat-new/ChatNew'
 import ChatDetails from './components/chats/chat-details/ChatDetails'
@@ -66,7 +66,7 @@ function App() {
 					/>
 				</Route>
 				<Route path='/' element={<ProtectedRoute user={token} />}>
-					<Route path='/chats' element={<ChatsListPage />}>
+					<Route path='/chats' element={<ChatsPage token={token} />}>
 						<Route path=':chatId' element={<Chat />} />
 						<Route
 							path=':chatId/details'
