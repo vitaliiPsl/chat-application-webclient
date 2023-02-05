@@ -5,8 +5,12 @@ module.exports = {
   ],
   theme: {
     minHeight: {
-        '6': '48px',
-        '8': '64px'
+        '12': '48px',
+        '18': '64px',
+    },
+    minWidth: {
+        '40': '160px',
+        '50': '200px',
     },
     extend: {},
   },
