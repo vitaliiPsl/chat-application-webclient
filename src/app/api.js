@@ -24,7 +24,7 @@ const baseQuery = fetchBaseQuery({
 const baseQueryWrapper = async (args, api, extraOptions) => {
     let result = await baseQuery(args, api, extraOptions)
 
-    if (result?.error?.originalStatus === 401) {
+    if (result?.error?.status === 401) {
         api.dispatch(logout())
     }
 
