@@ -6,7 +6,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { setUser } from './features/auth/authSlice'
 import { useGetAuthenticatedUserQuery } from './features/auth/authApi'
 
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom'
 
 import Navbar from './components/navbar/Navbar'
 
@@ -46,6 +46,7 @@ function App() {
 	return (
 		<div className='App'>
 			<Navbar user={user} />
+            
 			<Routes>
 				<Route path='/auth'>
 					<Route
@@ -66,6 +67,8 @@ function App() {
 					/>
 				</Route>
 				<Route path='/' element={<ProtectedRoute user={token} />}>
+					<Route path='/' element={<Navigate to={'/chats'} />} />
+                    
 					<Route path='/chats' element={<ChatsPage token={token} />}>
 						<Route path=':chatId' element={<Chat />} />
 						<Route
