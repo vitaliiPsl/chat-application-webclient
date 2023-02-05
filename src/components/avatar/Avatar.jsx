@@ -1,5 +1,3 @@
-import './Avatar.css'
-
 const Avatar = ({ size = 32, image, placeholder = 'avatar' }) => {
 	let wrapperStyle = {
 		height: size,
@@ -11,8 +9,11 @@ const Avatar = ({ size = 32, image, placeholder = 'avatar' }) => {
 	}
 
 	return (
-		<div className='avatar' style={wrapperStyle}>
-			{image && <img src={image} />}
+		<div
+			className='avatar flex-shrink-0 flex items-center justify-center bg-zinc-800 text-white border-2 border-white rounded-full overflow-hidden'
+			style={wrapperStyle}
+		>
+			{image && <img src={image} className={'w-full h-full object-cover'} />}
 
 			{!image && (
 				<span style={placeholderStyle}>
