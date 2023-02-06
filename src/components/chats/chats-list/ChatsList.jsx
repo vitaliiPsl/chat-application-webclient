@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom'
 import ChatListItem from './ChatListItem'
 import Button from '../../button/Button'
 import Spinner from '../../spinner/Spinner'
+import CenterBox from '../../layout/CenterBox'
 
 const ChatsList = () => {
 	const { chats } = useSelector((state) => state.chats)
@@ -78,21 +79,21 @@ const ChatsList = () => {
 				<label className='Chats-label'>Your chats</label>
 
 				{isLoading && (
-					<div className='center-box p-6 flex-1 flex items-center justify-center'>
+					<CenterBox>
 						<Spinner color='#888' />
-					</div>
+					</CenterBox>
 				)}
 
 				{!isLoading && chats && chats.length === 0 && (
-					<div className='center-box no-chats-box center-box p-6 flex-1 flex items-center justify-center'>
+					<CenterBox>
 						<span className='no-chats-message'>
 							You don't have any chats. <br /> Click{' '}
 							<b>'Create chat'</b> to start chatting
 						</span>
-					</div>
+					</CenterBox>
 				)}
 
-				{!isLoading && chats && (
+				{!isLoading && chats?.length > 0 && (
 					<div className='chats-list min-h-0 flex-1 flex flex-col overflow-y-auto'>
 						{mapChatsToChatListItems(chats)}
 					</div>
