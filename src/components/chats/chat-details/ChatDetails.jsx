@@ -1,5 +1,3 @@
-import './ChatDetails.css'
-
 import { useState, useEffect } from 'react'
 
 import { useParams, useNavigate } from 'react-router-dom'
