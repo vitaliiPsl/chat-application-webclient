@@ -1,9 +1,8 @@
-import './UsersSearch.jsx'
-
 import { useState, useEffect, useRef } from 'react'
 
 import { useLazyGetUsersByNicknameQuery } from '../../features/users/usersApi'
 
+import InnerBox from '../layout/InnerBox'
 import TextField from '../text-field/TextField.jsx'
 import UserListItem from '../chats/chat-new/UserListItem'
 import MaterialIcon from '../material-icon/MaterialIcon.jsx'
@@ -63,7 +62,7 @@ const UsersSearch = ({ onItemClick }) => {
 	}
 
 	return (
-		<div className='inner-box users-search-box'>
+		<InnerBox className={'users-search-box'}>
 			<label className='users-search-label'>User search</label>
 
 			<TextField
@@ -75,11 +74,11 @@ const UsersSearch = ({ onItemClick }) => {
 			/>
 
 			{usersSearchResult.length > 0 && (
-				<div className={`users-search-result-list`}>
+				<div className={`users-search-result-list flex flex-col`}>
 					{mapUserSearchResults(usersSearchResult)}
 				</div>
 			)}
-		</div>
+		</InnerBox>
 	)
 }
 
