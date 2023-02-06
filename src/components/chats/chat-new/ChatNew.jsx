@@ -92,7 +92,7 @@ const ChatNew = () => {
 				<h3>Start new chat</h3>
 			</div>
 
-			<div className='chat-new-form-box min-h-0 p-8 flex-1 flex flex-col justify-between gap-3'>
+			<div className='chat-new-form-box min-h-0 p-2 flex-1 flex flex-col justify-between gap-3'>
 				{error && (
 					<Error
 						message={error}
