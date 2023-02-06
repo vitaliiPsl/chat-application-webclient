@@ -308,11 +308,13 @@ const ChatDetails = () => {
 							</div>
 
 							<div className='chat-details-info chat-details-info-chat-description-box flex flex-col'>
-								<span className='label chat-details-info-chat-description-label text-zinc-500'>
-									Description
-								</span>
+								{(chat.description || isEditMode) && (
+									<span className='label chat-details-info-chat-description-label text-zinc-500'>
+										Description
+									</span>
+								)}
 
-								{!isEditMode && (
+								{chat.description && !isEditMode && (
 									<span className='chat-details-info-chat-description'>
 										{chat.description}
 									</span>
@@ -321,7 +323,9 @@ const ChatDetails = () => {
 								{isEditMode && (
 									<TextField
 										name={'description'}
-										placeholder={chat.description}
+										placeholder={
+											chat.description || 'Description'
+										}
 										onChange={handleInputChange}
 									/>
 								)}
