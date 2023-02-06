@@ -5,12 +5,12 @@ import { useNavigate } from 'react-router-dom'
 
 import InnerBox from '../../layout/InnerBox'
 import OuterBox from '../../layout/OuterBox'
-import UserListItem from './UserListItem'
 import Button from '../../button/Button'
 import TextField from '../../text-field/TextField'
 import Error from '../../error/Error'
 import Spinner from '../../spinner/Spinner'
 import UsersSearch from '../../users-search/UsersSearch'
+import UserListItem from '../../users-search/UserListItem'
 import MaterialIcon from '../../material-icon/MaterialIcon'
 
 const initChatDetails = {

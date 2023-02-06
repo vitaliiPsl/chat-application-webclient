@@ -1,4 +1,4 @@
-import Avatar from '../../avatar/Avatar'
+import Avatar from '../avatar/Avatar'
 
 const UserListItem = ({ user, onClick, icon, onIconClick }) => {
 	return (
