@@ -1,9 +1,10 @@
-import './ChatNew.css'
-
 import { useState } from 'react'
 
 import { useCreateChatMutation } from '../../../features/chats/chatsApi'
+import { useNavigate } from 'react-router-dom'
 
+import InnerBox from '../../layout/InnerBox'
+import OuterBox from '../../layout/OuterBox'
 import UserListItem from './UserListItem'
 import Button from '../../button/Button'
 import TextField from '../../text-field/TextField'
@@ -11,7 +12,6 @@ import Error from '../../error/Error'
 import Spinner from '../../spinner/Spinner'
 import UsersSearch from '../../users-search/UsersSearch'
 import MaterialIcon from '../../material-icon/MaterialIcon'
-import { useNavigate } from 'react-router-dom'
 
 const initChatDetails = {
 	name: '',
@@ -87,12 +87,12 @@ const ChatNew = () => {
 	}
 
 	return (
-		<div className='chat-new'>
-			<div className='chat-new-title-bar-box'>
+		<div className='chat-new min-h-0 h-full flex-1 flex flex-col'>
+			<div className='chat-new-title-bar-box min-h-18 py-2 px-3 flex items-center justify-center gap-2 text-white bg-zinc-800'>
 				<h3>Start new chat</h3>
 			</div>
 
-			<div className='chat-new-form-box'>
+			<div className='chat-new-form-box min-h-0 p-8 flex-1 flex flex-col justify-between gap-3'>
 				{error && (
 					<Error
 						message={error}
@@ -100,9 +100,9 @@ const ChatNew = () => {
 					/>
 				)}
 
-				<form className='chat-new-form'>
-					<div className='outer-box chat-new-details-box'>
-						<div className='inner-box chat-new-details-name'>
+				<form className='chat-new-form min-h-0 flex-1 flex flex-col justify-between gap-3 overflow-y-auto'>
+					<OuterBox className={'chat-new-details-box'}>
+						<InnerBox className={'chat-new-details-name'}>
 							<TextField
 								label={'Name'}
 								type='text'
@@ -111,9 +111,9 @@ const ChatNew = () => {
 								required={true}
 								onChange={handleInputChange}
 							/>
-						</div>
+						</InnerBox>
 
-						<div className='inner-box chat-new-details-description'>
+						<InnerBox className={'chat-new-details-description'}>
 							<TextField
 								label={'Description'}
 								type='text'
@@ -122,19 +122,21 @@ const ChatNew = () => {
 								required={false}
 								onChange={handleInputChange}
 							/>
-						</div>
-					</div>
+						</InnerBox>
+					</OuterBox>
 
-					<div className='outer-box chat-new-users-box'>
+					<OuterBox className={'chat-new-users-box flex-1'}>
 						<UsersSearch onItemClick={addSelectedUser} />
 
-						<div className='inner-box chat-new-users-selected-box'>
+						<InnerBox
+							className={'chat-new-users-selected-box flex-1'}
+						>
 							<label className='users-selected-label'>
 								Selected users
 							</label>
 
 							{selectedUsers.size === 0 && (
-								<div className='no-selected-users-box'>
+								<div className='no-selected-users-box p-3 flex-1 flex items-center justify-center'>
 									<span className='no-selected-users-message'>
 										You need to select at least one user to
 										start new chat
@@ -145,8 +147,8 @@ const ChatNew = () => {
 							<div className='chat-new-users-selected-list'>
 								{mapSelectedUsers(selectedUsers)}
 							</div>
-						</div>
-					</div>
+						</InnerBox>
+					</OuterBox>
 				</form>
 
 				<Button onClick={handleSubmit}>
