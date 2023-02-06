@@ -1,7 +1,7 @@
-const OuterBox = ({ children, className }) => {
+const OuterBox = ({ children, className, direction = 'row' }) => {
 	return (
 		<div
-			className={`outer-box p-4 flex flex-col gap-4 bg-zinc-600 rounded-lg ${className}`}
+			className={`outer-box ${className} p-4 flex flex-${direction} gap-4 bg-zinc-200 rounded-lg`}
 		>
 			{children}
 		</div>

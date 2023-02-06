@@ -26,6 +26,7 @@ import Avatar from '../../avatar/Avatar'
 import Spinner from '../../spinner/Spinner'
 import Error from '../../error/Error'
 
+import OuterBox from '../../layout/OuterBox'
 import TextField from '../../text-field/TextField'
 import Button from '../../button/Button'
 import MaterialIcon from '../../material-icon/MaterialIcon'
@@ -34,6 +35,7 @@ import UsersSearch from '../../users-search/UsersSearch'
 import Dropdown from '../../dropdown/Dropdown'
 
 import ChatBar from '../chat-bar/ChatBar'
+import InnerBox from '../../layout/InnerBox'
 
 const initChatDetails = { name: '', description: '' }
 
@@ -230,7 +232,7 @@ const ChatDetails = () => {
 	const getChatBarDropdown = () => {
 		return (
 			<Dropdown options={getChatBarDropdownOptions()}>
-				<div className='chat-options-icon-box'>
+				<div className='chat-options-icon-box w-9 h-9'>
 					<MaterialIcon icon={'more_vert'} />
 				</div>
 			</Dropdown>
@@ -252,7 +254,7 @@ const ChatDetails = () => {
 	return !chat || !actorMember ? (
 		<Spinner />
 	) : (
-		<div className='chat-details'>
+		<div className='chat-details min-h-0 h-full flex-1 flex flex-col'>
 			<ChatBar
 				icon={
 					<MaterialIcon
@@ -264,108 +266,122 @@ const ChatDetails = () => {
 				dropdown={getChatBarDropdown()}
 			/>
 
-			<div className='chat-details-content'>
+			<div className='chat-details-content min-h-0 p-2 flex-1 flex flex-col gap-3 overflow-y-auto'>
 				{error && (
 					<Error message={error} onClose={() => setError(null)} />
 				)}
 
-				<div className='outer-box chat-details-box'>
-					<div className='inner-box chat-details-avatar-box'>
-						<Avatar size={64} placeholder={chat.name} />
-					</div>
-
-					<form
-						onSubmit={updateChat}
-						className='inner-box chat-details-info-box'
+				<OuterBox
+					className={'chat-details-box flex-row items-stretch'}
+					direction={'row'}
+				>
+					<InnerBox
+						className={
+							'chat-details-avatar-box min-w-50 flex items-center justify-center'
+						}
 					>
-						<div className='chat-details-info chat-details-info-chat-name-box'>
-							<span className='label chat-details-info-chat-name-label'>
-								Name
-							</span>
-
-							{!isEditMode && (
-								<span className='chat-details-info-chat-name'>
-									{chat.name}
+						<Avatar size={64} placeholder={chat.name} />
+					</InnerBox>
+					<InnerBox className={'flex-1 p-0'}>
+						<form
+							onSubmit={updateChat}
+							className='chat-details-info-box p-3 flex-1 flex flex-col gap-2 relative'
+						>
+							<div className='chat-details-info chat-details-info-chat-name-box flex flex-col'>
+								<span className='label chat-details-info-chat-name-label text-zinc-500'>
+									Name
 								</span>
-							)}
 
-							{isEditMode && (
-								<TextField
-									name={'name'}
-									placeholder={chat.name}
-									onChange={handleInputChange}
-									required={true}
-								/>
-							)}
-						</div>
-
-						<div className='chat-details-info chat-details-info-chat-description-box'>
-							<span className='label chat-details-info-chat-description-label'>
-								Description
-							</span>
-
-							{!isEditMode && (
-								<span className='chat-details-info-chat-description'>
-									{chat.description}
-								</span>
-							)}
-
-							{isEditMode && (
-								<TextField
-									name={'description'}
-									placeholder={chat.description}
-									onChange={handleInputChange}
-								/>
-							)}
-						</div>
-
-						{isEditMode && (
-							<Button type={'submit'}>
-								{updateChatIsLoading ? (
-									<Spinner size={19} color='#888' />
-								) : (
-									'Save'
+								{!isEditMode && (
+									<span className='chat-details-info-chat-name'>
+										{chat.name}
+									</span>
 								)}
-							</Button>
-						)}
 
-						{isMemberOwnerOrAdmin(actorMember) && (
-							<div className='chat-details-info-icon-box'>
-								<MaterialIcon
-									icon={'edit'}
-									onClick={toggleEditMode}
-								/>
+								{isEditMode && (
+									<TextField
+										name={'name'}
+										placeholder={chat.name}
+										onChange={handleInputChange}
+										required={true}
+									/>
+								)}
 							</div>
-						)}
-					</form>
-				</div>
 
-				<div className='outer-box chat-details-members-box'>
+							<div className='chat-details-info chat-details-info-chat-description-box flex flex-col'>
+								<span className='label chat-details-info-chat-description-label text-zinc-500'>
+									Description
+								</span>
+
+								{!isEditMode && (
+									<span className='chat-details-info-chat-description'>
+										{chat.description}
+									</span>
+								)}
+
+								{isEditMode && (
+									<TextField
+										name={'description'}
+										placeholder={chat.description}
+										onChange={handleInputChange}
+									/>
+								)}
+							</div>
+
+							{isEditMode && (
+								<Button type={'submit'}>
+									{updateChatIsLoading ? (
+										<Spinner size={19} color='#888' />
+									) : (
+										'Save'
+									)}
+								</Button>
+							)}
+
+							{isMemberOwnerOrAdmin(actorMember) && (
+								<div className='chat-details-info-icon-box absolute top-1 right-1 w-7 h-7'>
+									<MaterialIcon
+										icon={'edit'}
+										onClick={toggleEditMode}
+									/>
+								</div>
+							)}
+						</form>
+					</InnerBox>
+				</OuterBox>
+
+				<OuterBox
+					className={
+						'chat-details-members-box min-h-0 flex-1 flex flex-col overflow-y-auto'
+					}
+				>
 					{isUsersSearchOpen && (
 						<UsersSearch onItemClick={addChatMember} />
 					)}
 
-					<div className='inner-box chat-details-members'>
-						<div className='chat-details-members-bar'>
-							<label className='chat-details-members-bar-label'>
-								Chat members
-							</label>
+					<InnerBox className={'chat-details-members'}>
+						<div className='inner-box chat-details-members'>
+							<div className='chat-details-members-bar flex justify-between items-center'>
+								<label className='chat-details-members-bar-label'>
+									Chat members
+								</label>
 
-							<div className='chat-details-members-bar-add-member-icon'>
-								<MaterialIcon
-									icon={'person_add'}
-									onClick={toggleSearchBox}
-								/>
+								<div className='chat-details-members-bar-add-member-icon w-9 h-9'>
+									<MaterialIcon
+										icon={'person_add'}
+										onClick={toggleSearchBox}
+									/>
+								</div>
 							</div>
+
+							{members && (
+								<div className='chat-details-members-list'>
+									{mapMembersToMemberListItems(members)}
+								</div>
+							)}
 						</div>
-
-						{members && (
-							<div className='chat-details-members-list'>
-								{mapMembersToMemberListItems(members)}
-							</div>
-						)}
-					</div>
-				</div>
+					</InnerBox>
+				</OuterBox>
 			</div>
 		</div>
 	)
