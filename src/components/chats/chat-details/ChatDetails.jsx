@@ -126,6 +126,7 @@ const ChatDetails = () => {
 
 		try {
 			await updateChatQuery({ chatId, payload: chatDetails }).unwrap()
+			toggleEditMode()
 		} catch (err) {
 			handleError(err)
 		}
