@@ -1,6 +1,6 @@
 import './Chat.css'
 
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 
 import { useSelector, useDispatch } from 'react-redux'
 import {
@@ -12,29 +12,23 @@ import {
 import {
 	useGetChatQuery,
 	useLazyGetChatMessagesQuery,
-	useSendMessageMutation,
 } from '../../../features/chats/chatsApi'
 
 import { useParams, useNavigate } from 'react-router-dom'
 
 import Avatar from '../../avatar/Avatar'
-import TextField from '../../text-field/TextField'
-import Button from '../../button/Button'
 import Spinner from '../../spinner/Spinner'
 
 import ChatMessageGroup from './ChatMessageGroup'
 import ChatBar from '../chat-bar/ChatBar'
 import { useSubscription } from 'react-stomp-hooks'
-
-const STOMP_BROKER_URL = 'ws://localhost:8080/ws'
+import MessageForm from './message-form/MessageForm'
 
 const Chat = () => {
 	const { chatId } = useParams()
 
 	const { user, token } = useSelector((state) => state.auth)
 	const { chat, messages } = useSelector((state) => state.chats)
-
-	const messageInputRef = useRef()
 
 	const dispatch = useDispatch()
 	const navigate = useNavigate()
@@ -57,9 +51,6 @@ const Chat = () => {
 			isLoading: messagesIsLoading,
 		},
 	] = useLazyGetChatMessagesQuery()
-
-	const [sendMessageQuery, { sendMessageIsLoading }] =
-		useSendMessageMutation()
 
 	const onMessage = (messageData) => {
 		let message = JSON.parse(messageData.body)
@@ -93,29 +84,6 @@ const Chat = () => {
 
 	const openChatDetails = () => {
 		navigate(`/chats/${chatId}/details`)
-	}
-
-	const handleSendMessage = (e) => {
-		e.preventDefault()
-
-		let content = messageInputRef.current.value
-		messageInputRef.current.value = ''
-
-		if (!content || !content.trim()) {
-			return
-		}
-
-		sendMessage(content)
-	}
-
-	const sendMessage = async (content) => {
-		let message = { content }
-
-		try {
-			await sendMessageQuery({ id: chatId, message }, false).unwrap()
-		} catch (err) {
-			console.log(err)
-		}
 	}
 
 	const mapMessagesToMessageGroups = (messages) => {
@@ -179,30 +147,7 @@ const Chat = () => {
 				)}
 			</div>
 
-			<div className='chat-message-input-box'>
-				<form
-					className='chat-message-form'
-					onSubmit={handleSendMessage}
-				>
-					<TextField
-						className='chat-message-input'
-						name={'message'}
-						placeholder={'Message...'}
-						reference={messageInputRef}
-					/>
-
-					<Button
-						type={'submit'}
-						className='chat-message-input-button'
-					>
-						{sendMessageIsLoading ? (
-							<Spinner size={19} color={'#888'} />
-						) : (
-							'Send'
-						)}
-					</Button>
-				</form>
-			</div>
+			<MessageForm chatId={chatId} />
 		</div>
 	)
 }

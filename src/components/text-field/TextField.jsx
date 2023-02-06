@@ -1,6 +1,8 @@
 import './TextField.css'
 
 const TextField = ({
+	className = '',
+	inputClassName = '',
 	type = 'text',
 	name,
 	label,
@@ -8,22 +10,22 @@ const TextField = ({
 	required = false,
 	autoComplete = false,
 	onChange,
-    reference
+	reference,
 }) => {
 	return (
-		<div className='text-field'>
+		<div className={`text-field ${className}`}>
 			{label && <label htmlFor='field'>{label}</label>}
 
 			<input
 				type={type}
 				name={name}
 				id={`${name}-field`}
-				className='field'
+				className={`field ${inputClassName}`}
 				placeholder={placeholder}
 				required={required}
 				autoComplete={autoComplete ? 'on' : 'off'}
 				onChange={onChange}
-                ref={reference}
+				ref={reference}
 			/>
 		</div>
 	)
