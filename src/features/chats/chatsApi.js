@@ -56,7 +56,7 @@ export const chatsApiReducer = apiSlice.injectEndpoints({
 			invalidatesTags: ['Members', 'Chats'],
 		}),
 		getChatMessages: builder.query({
-			query: (id) => ({ url: `/chats/${id}/messages?limit=50`}),
+			query: (args) => ({ url: `/chats/${args.chatId}/messages?limit=${args.limit || '15'}&lastId=${args.lastId || ''}`}),
 		}),
 		// TODO: remove after ws connection is implemented
 		sendMessage: builder.mutation({

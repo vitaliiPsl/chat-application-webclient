@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux'
 
-const ChatMessage = ({ message }) => {
+const ChatMessage = ({ message, reference }) => {
 	const { user } = useSelector((state) => state.auth)
 
 	let timeOptions = { hour12: true, hour: '2-digit', minute: '2-digit' }
@@ -11,7 +11,8 @@ const ChatMessage = ({ message }) => {
 	return (
 		<div
 			className={`chat-message min-w-20 w-fit px-2 py-1 flex flex-col text-white bg-zinc-800 border border-zinc-800 rounded-lg`}
-		>
+            ref={reference}
+        >
 			<div className='content'>{message.content}</div>
 			<div
 				className={`timestamp text-xs ${
