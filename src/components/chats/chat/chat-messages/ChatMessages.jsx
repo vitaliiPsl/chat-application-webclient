@@ -134,7 +134,7 @@ const ChatMessages = ({ chatId }) => {
 	}
 
 	return (
-		<div className='chat-messages-box'>
+		<div className='chat-messages-box min-h-0 flex-1 flex flex-col justify-center items-center gap-2 overflow-hidden'>
 			{isLoading && <Spinner />}
 
 			{messages && messages.length === 0 && (
@@ -144,7 +144,7 @@ const ChatMessages = ({ chatId }) => {
 			)}
 
 			{messages && messages.length > 0 && (
-				<div className='chat-messages-list'>
+				<div className='chat-messages-list min-h-0 w-full py-4 px-2 flex-1 flex flex-col-reverse gap-2 overflow-y-auto'>
 					{mapMessages(messages)}
 				</div>
 			)}

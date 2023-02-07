@@ -1,5 +1,3 @@
-import './Chat.css'
-
 import { useEffect } from 'react'
 
 import { useSelector, useDispatch } from 'react-redux'
@@ -25,7 +23,7 @@ const Chat = () => {
 	const {
 		data: chatData,
 		error: chatError,
-		isLoading: chatIsLoading,
+		isLoading
 	} = useGetChatQuery(chatId, {
 		refetchOnFocus: false,
 		refetchOnMountOrArgChange: false,
@@ -48,7 +46,7 @@ const Chat = () => {
 	return !chat ? (
 		<Spinner />
 	) : (
-		<div className='chat'>
+		<div className='chat min-h-0 h-full flex-1 flex flex-col justify-between'>
 			<ChatBar
 				icon={<Avatar placeholder={chat.name} />}
 				chat={chat}
