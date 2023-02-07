@@ -1,19 +1,9 @@
 import './ChatMessageGroup.css'
 
-import Avatar from '../../avatar/Avatar'
-import ChatMessage from './ChatMessage'
+import Avatar from '../../../avatar/Avatar'
 
-const ChatMessageGroup = ({ group, user }) => {
-	let author = group[0]
-	let messages = group[1]
-
+const ChatMessageGroup = ({ messages, author, user }) => {
 	let isAuthor = user.id === author.id
-
-	const mapMessages = () => {
-		return messages?.map((message, index) => (
-			<ChatMessage message={message} user={user} key={index} />
-		))
-	}
 
 	return (
 		<div className={`chat-message-group-box ${isAuthor ? 'author' : ''}`}>
@@ -27,7 +17,7 @@ const ChatMessageGroup = ({ group, user }) => {
 				)}
 
 				<div className='chat-messages-group-messages-list'>
-					{mapMessages()}
+					{messages}
 				</div>
 			</div>
 		</div>

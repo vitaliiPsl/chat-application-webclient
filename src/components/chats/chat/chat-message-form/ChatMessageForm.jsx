@@ -6,7 +6,7 @@ import TextField from '../../../text-field/TextField'
 import Button from '../../../button/Button'
 import Spinner from '../../../spinner/Spinner'
 
-const MessageForm = ({ chatId }) => {
+const ChatMessageForm = ({ chatId }) => {
 	const messageInputRef = useRef()
 
 	const [sendMessageQuery, { sendMessageIsLoading }] =
@@ -38,10 +38,10 @@ const MessageForm = ({ chatId }) => {
 	let buttonContent = sendMessageIsLoading ? <Spinner size={19} /> : 'Send'
 
 	return (
-		<div className='message-form-box py-2 px-4 bg-zinc-800'>
+		<div className='chat-message-form-box py-2 px-4 bg-zinc-800'>
 			<form
 				onSubmit={handleSendMessage}
-				className='message-form flex gap-4'
+				className='chat-message-form flex gap-4'
 			>
 				<TextField
 					className='chat-message-input flex-1'
@@ -62,4 +62,4 @@ const MessageForm = ({ chatId }) => {
 	)
 }
 
-export default MessageForm
+export default ChatMessageForm

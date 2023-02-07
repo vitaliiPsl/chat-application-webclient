@@ -1,7 +1,6 @@
 import './ChatMessageGroup.css'
 
-const ChatMessage = ({ message, user }) => {
-	let right = message.user.id === user.id
+const ChatMessage = ({ message }) => {
 
 	let timeOptions = { hour12: true, hour: '2-digit', minute: '2-digit'}
 	let time = new Date(message.sentAt).toLocaleTimeString('en', timeOptions)
