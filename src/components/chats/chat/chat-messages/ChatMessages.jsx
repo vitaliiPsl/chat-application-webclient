@@ -17,13 +17,13 @@ const ChatMessages = ({ chatId }) => {
 	const { messages } = useSelector((state) => state.chats)
 
 	const [fetchedAll, setFetchedAll] = useState(false)
-	const [lastMessageId, setLastMessageId] = useState()
+	const [lastMessageId, setLastMessageId] = useState(null)
 
 	const { ref, inView } = useInView()
 
 	const dispatch = useDispatch()
 
-	const [getChatMessagesQuery, { isLoading }] = useLazyGetChatMessagesQuery()
+	const [getChatMessagesQuery] = useLazyGetChatMessagesQuery()
 
 	const onMessage = (messageData) => {
 		let message = JSON.parse(messageData.body)
@@ -36,27 +36,25 @@ const ChatMessages = ({ chatId }) => {
 	})
 
 	useEffect(() => {
-		if (!messages) {
-			loadMessages(true)
+		loadMessages(null, true)
+
+		return () => {
+			dispatch(setMessages(null))
+			setFetchedAll((fetchedAll) => false)
 		}
-	}, [])
+	}, [chatId])
 
 	useEffect(() => {
 		if (inView && !fetchedAll) {
-			loadMessages()
+			loadMessages(lastMessageId)
 		}
 	}, [inView])
 
-	const loadMessages = async (initLoad) => {
-		let args = { chatId, lastId: lastMessageId }
+	const loadMessages = async (lastId, initLoad) => {
+		let args = { chatId, lastId }
 
 		try {
 			let { data } = await getChatMessagesQuery(args, false)
-
-			// return if response page is empty
-			if (data.empty) {
-				return
-			}
 
 			// initialize messages if it is init load, add  fetched otherwise
 			let loadedMessages = data.content
@@ -66,9 +64,16 @@ const ChatMessages = ({ chatId }) => {
 				dispatch(setMessages([...messages, ...loadedMessages]))
 			}
 
+			// return if response page is empty
+			if (data.empty) {
+				return
+			}
+
 			// save id of the last message
-			let lastMessage = loadedMessages[loadedMessages.length - 1]
-			setLastMessageId(lastMessage.id)
+			if (!data.empty) {
+				let lastMessage = loadedMessages[loadedMessages.length - 1]
+				setLastMessageId(lastMessage.id)
+			}
 
 			// check if it is last page
 			if (data.last) {
@@ -135,7 +140,7 @@ const ChatMessages = ({ chatId }) => {
 
 	return (
 		<div className='chat-messages-box min-h-0 flex-1 flex flex-col justify-center items-center gap-2 overflow-hidden'>
-			{isLoading && <Spinner />}
+			{!messages && <Spinner />}
 
 			{messages && messages.length === 0 && (
 				<div className='chat-messages-list-empty'>
