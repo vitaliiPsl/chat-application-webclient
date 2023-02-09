@@ -2,14 +2,15 @@ import './ChatsPage.css'
 
 import ChatsList from '../../components/chats/chats-list/ChatsList'
 
-import { Outlet } from 'react-router-dom'
+import { useOutlet } from 'react-router-dom'
 import { StompSessionProvider } from 'react-stomp-hooks'
 
 const STOMP_BROKER_URL = 'ws://localhost:8080/ws'
 
-const ChatsPage = ({token}) => {
+const ChatsPage = ({ token }) => {
+	const outlet = useOutlet()
 
-    const handleStompError = (frame) => {
+	const handleStompError = (frame) => {
 		console.log(frame)
 	}
 
@@ -28,7 +29,13 @@ const ChatsPage = ({token}) => {
 					<ChatsList />
 				</div>
 				<div className='chats-page-chats-content-box'>
-					<Outlet />
+					{outlet || (
+						<div className='no-chat-selected-box'>
+							<span className='no-chat-selected-message'>
+								Select chat from the list or start a new one
+							</span>
+						</div>
+					)}
 				</div>
 			</div>
 		</StompSessionProvider>
