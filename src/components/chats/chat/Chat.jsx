@@ -23,7 +23,6 @@ const Chat = () => {
 	const {
 		data: chatData,
 		error: chatError,
-		isLoading
 	} = useGetChatQuery(chatId, {
 		refetchOnFocus: false,
 		refetchOnMountOrArgChange: false,
@@ -35,9 +34,13 @@ const Chat = () => {
 			dispatch(setChat(chatData))
 		}
 		if (chatError) {
-			console.log(chatError?.data?.message)
+			handleError(chatError)
 		}
 	}, [chatData, chatError])
+
+	const handleError = (error) => {
+		throw { code: error?.status, message: error?.data.message }
+	}
 
 	const openChatDetails = () => {
 		navigate(`/chats/${chatId}/details`)

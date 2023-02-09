@@ -58,38 +58,26 @@ const ChatDetails = () => {
 	const dispatch = useDispatch()
 	const navigate = useNavigate()
 
-	const {
-		data: chatData,
-		error: chatError,
-		isLoading: chatIsLoading,
-	} = useGetChatQuery(chatId)
+	const { data: chatData, error: chatError } = useGetChatQuery(chatId)
 
 	const [updateChatQuery, { isLoading: updateChatIsLoading }] =
 		useUpdateChatMutation()
 
-	const [deleteChatQuery, { isLoading: deleteChatQueryIsLoading }] =
-		useDeleteChatMutation()
+	const [deleteChatQuery] = useDeleteChatMutation()
 
-	const {
-		data: memberData,
-		error: memberError,
-		isLoading: memberIsLoading,
-	} = useGetChatMemberQuery(
+	const { data: memberData, error: memberError } = useGetChatMemberQuery(
 		{ chatId: chatId, userId: user?.id },
 		{ skip: !chat || !user }
 	)
 
-	const {
-		data: membersData,
-		error: membersError,
-		isLoading: membersIsLoading,
-	} = useGetChatMembersQuery(chatId, { skip: !chat || !actorMember })
+	const { data: membersData, error: membersError } = useGetChatMembersQuery(
+		chatId,
+		{ skip: !chat || !actorMember }
+	)
 
-	const [addChatMemberQuery, { isLoading: addMemberIsLoading }] =
-		useAddChatMemberMutation()
+	const [addChatMemberQuery] = useAddChatMemberMutation()
 
-	const [removeChatMemberQuery, { isLoading: removeMemberQueryIsLoading }] =
-		useRemoveChatMemberMutation()
+	const [removeChatMemberQuery] = useRemoveChatMemberMutation()
 
 	useEffect(() => {
 		if (chatData) {
@@ -116,9 +104,7 @@ const ChatDetails = () => {
 	}, [chatError, memberError, membersError])
 
 	const handleError = (err) => {
-		console.log(err?.data?.message)
-
-		setError((error) => err?.data?.message)
+		throw { code: error?.status, message: error?.data.message }
 	}
 
 	const updateChat = async (e) => {
@@ -128,7 +114,7 @@ const ChatDetails = () => {
 			await updateChatQuery({ chatId, payload: chatDetails }).unwrap()
 			toggleEditMode()
 		} catch (err) {
-			handleError(err)
+			setError((error) => err?.data?.message)
 		}
 	}
 
@@ -137,7 +123,7 @@ const ChatDetails = () => {
 			await deleteChatQuery(chat.id)
 			navigate('/chats')
 		} catch (err) {
-			handleError(err)
+			setError((error) => err?.data?.message)
 		}
 	}
 
@@ -146,7 +132,7 @@ const ChatDetails = () => {
 		try {
 			await addChatMemberQuery({ chatId, payload }).unwrap()
 		} catch (err) {
-			handleError(err)
+			setError((error) => err?.data?.message)
 		}
 	}
 
@@ -157,7 +143,7 @@ const ChatDetails = () => {
 			await removeChatMemberQuery(payload).unwrap()
 			navigate('/chats')
 		} catch (err) {
-			handleError(err)
+			setError((error) => err?.data?.message)
 		}
 	}
 
@@ -167,7 +153,7 @@ const ChatDetails = () => {
 		try {
 			await removeChatMemberQuery(payload).unwrap()
 		} catch (err) {
-			handleError(err)
+			setError((error) => err?.data?.message)
 		}
 	}
 
