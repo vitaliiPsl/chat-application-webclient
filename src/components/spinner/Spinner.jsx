@@ -3,7 +3,7 @@ import './Spinner.css'
 const Spinner = ({
 	size = 32,
 	borderWeight = 4,
-	color = '#212121',
+	color = '#888',
 }) => {
 	return (
 		<div
@@ -13,7 +13,7 @@ const Spinner = ({
 				width: `${size}px`,
 			}}
 		>
-			<div className='spinner' style={{
+			<div className='spinner w-full h-full' style={{
                 borderColor: color,
                 borderWidth: borderWeight,
                 borderRightColor: '#0000'
